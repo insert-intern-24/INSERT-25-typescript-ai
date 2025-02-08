@@ -41,7 +41,7 @@ import 'ckeditor5/ckeditor5.css';
 
 import './style.css';
 
-const LICENSE_KEY = 'env가세요'
+const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 
 export default function CKEditer() {
 	const editorContainerRef = useRef(null);
