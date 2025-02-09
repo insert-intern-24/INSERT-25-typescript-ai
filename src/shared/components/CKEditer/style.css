@@ -23,6 +23,7 @@
 
 .editor-container__editor-wrapper {
 	display: flex;
+	justify-content: center;
 	width: 100vw;
 }
 
@@ -78,6 +79,11 @@
 	margin-right: 72px;
 }
 
+.ck.ck-editor__editable:hover {
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
 .editor_container__word-count .ck-word-count {
 	color: var(--ck-color-text);
 	display: flex;
@@ -96,4 +102,12 @@
 
 .editor-container__toolbar {
 	box-shadow: none !important;
+}
+
+.editor-container__menu-bar > div{
+	gap: 1.5rem !important;
+}
+
+.editor-container__menu-bar span {
+	font-size: 1rem !important;
 }
