@@ -56,7 +56,7 @@
 	max-height: var(--ckeditor5-preview-height);
 	min-height: var(--ckeditor5-preview-height);
 	overflow-y: scroll;
-	background: var(--ck-color-base-foreground);
+	background: #f8f8f8;
 }
 
 .editor-container_document-editor .editor-container__editor {
@@ -72,9 +72,7 @@
 	min-height: 297mm;
 	height: fit-content;
 	padding: 20mm 12mm;
-	border: 1px hsl(0, 0%, 82.7%) solid;
 	background: hsl(0, 0%, 100%);
-	box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.078);
 	flex: 1 1 auto;
 	margin-left: 72px;
 	margin-right: 72px;
@@ -94,4 +92,8 @@
 
 .editor-container_include-word-count.editor-container_document-editor .editor_container__word-count {
 	border-top: 1px solid var(--ck-color-base-border);
+}
+
+.editor-container__toolbar {
+	box-shadow: none !important;
 }
