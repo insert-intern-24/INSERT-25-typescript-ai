@@ -40,6 +40,7 @@ import {
 import 'ckeditor5/ckeditor5.css';
 
 import './style.css';
+import * as S from './WriteHeader/style';
 
 const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 
@@ -215,7 +216,10 @@ export default function CKEditer() {
 	return (
 		<div className="main-container">
 			<div className="editor-container editor-container_document-editor editor-container_include-word-count" ref={editorContainerRef}>
-				<div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
+				<S.WriteHeader>
+					<p className='title'>title</p>
+					<div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
+				</S.WriteHeader>
 				<div className="editor-container__toolbar" ref={editorToolbarRef}></div>
 				<div className="editor-container__editor-wrapper">
 					<div className="editor-container__editor">
