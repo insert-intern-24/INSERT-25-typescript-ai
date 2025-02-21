@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import word from "../../../../../public/images/icon/word.svg";
+import word from "../../../../public/images/icon/word.svg";
 
 export default function ListSort() {
   return (
