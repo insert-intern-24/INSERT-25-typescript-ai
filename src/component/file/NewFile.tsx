@@ -1,13 +1,33 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function NewFile() {
+  const navigate = useNavigate();
+
+  const handleNewFile = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/files`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      console.log(data.hash_id);
+      navigate(`/write/${data.hash_id}`);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <>
       <NewFileBox>
         <Hello>환영합니다</Hello>
         <FileButton>
-          <NewFileButton>새 파일</NewFileButton>
+          <NewFileButton onClick={() => handleNewFile()}>새 파일</NewFileButton>
           <OpenButton>열기</OpenButton>
         </FileButton>
       </NewFileBox>
