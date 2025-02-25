@@ -1,11 +1,15 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Write from '@/pages/write/ui/index.tsx';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import FilePage from "@/pages/write/file/index.tsx";
 
 const router = createBrowserRouter([
   {
-    path: '/write',
-    element: <Write />
-  }
+    path: "/",
+    element: <FilePage />,
+  },
+  {
+    path: "/write",
+    element: <FilePage />,
+  },
 ]);
 
 export default function App() {
