@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import FilePage from "@/pages/write/file/index.tsx";
+import FilePage from "@/pages/file";
 
 const router = createBrowserRouter([
   {
