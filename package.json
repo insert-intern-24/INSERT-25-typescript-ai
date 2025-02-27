@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "domain": "echo \"127.0.0.1 local.jhnara.asuscomm.com\" | sudo tee -a /etc/hosts"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^44.1.0",
