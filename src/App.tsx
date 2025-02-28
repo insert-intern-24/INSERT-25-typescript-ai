@@ -1,13 +1,15 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FilePage from "@/pages/file";
+import IndexPage from "@/pages/index/ui";
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <FilePage />,
+    element: <IndexPage />,
   },
   {
-    path: "/write",
+    path: "/file",
     element: <FilePage />,
   },
 ]);
