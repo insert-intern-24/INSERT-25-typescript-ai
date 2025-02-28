@@ -12,11 +12,11 @@ export default function NewFile() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include"
       });
       const data = await response.json();
-
-      console.log(data.hash_id);
-      navigate(`/write/${data.hash_id}`);
+      console.log(data.hashed_id);
+      navigate(`/write/${data.hashed_id}`);
     } catch (error) {
       console.error("Error:", error);
     }

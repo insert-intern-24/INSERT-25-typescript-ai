@@ -8,7 +8,6 @@ const IndexPage = () => {
       console.error("Error:", error);
     }
   };
-
   return (
     <button onClick={()=>login()}>로그인</button>
   )
