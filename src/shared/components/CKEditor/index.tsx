@@ -338,7 +338,7 @@ export default function CKEditorComponent() {
           ref={editorContainerRef}
         >
           <S.WriteHeader>
-            <p className="title">title</p>
+            <p className="title">{editorOriginData.title}</p>
             <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
           </S.WriteHeader>
           <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
