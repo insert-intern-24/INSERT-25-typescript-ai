@@ -299,38 +299,47 @@ export default function CKEditer() {
     };
   }, [isLayoutReady]);
 
-  return (
-    <div className="main-container">
-      <div
-        className="editor-container editor-container_document-editor editor-container_include-word-count"
-        ref={editorContainerRef}
-      >
-        <S.WriteHeader>
-          <p className="title">title</p>
-          <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
-        </S.WriteHeader>
-        <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
-        <div className="editor-container__editor-wrapper">
-          <div className="editor-container__editor">
-            <div ref={editorRef}>
-              {editorConfig && (
-                <CKEditor
-                  onReady={(editor) => {
-                    const wordCount = editor.plugins.get("WordCount");
-                    editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-                    editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
-                    editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
-                  }}
-                  onAfterDestroy={() => {
-                    Array.from(editorWordCountRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
-                    Array.from(editorToolbarRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
-                    Array.from(editorMenuBarRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
+    return (
+      <div className="main-container">
+        <div
+          className="editor-container editor-container_document-editor editor-container_include-word-count"
+          ref={editorContainerRef}
+        >
+          <S.WriteHeader>
+            <p className="title">title</p>
+            <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
+          </S.WriteHeader>
+          <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
+          <div className="editor-container__editor-wrapper">
+            <div className="editor-container__editor">
+              <div ref={editorRef}>
+                {editorConfig && (
+                  <CKEditor
+                    onReady={(editor) => {
+                      const wordCount = editor.plugins.get("WordCount");
+                      
+                        editor.model.document.on('change:data', () => {
+                        const data = editor.getData();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(data, 'text/html');
+                        const bodyContent = doc.body ? doc.body.innerHTML : '';
+                        // CKditor 5의 content 추출
+                        console.log('Editor content changed:', bodyContent);
+                        });
+                      editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+                      editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
+                      editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+                    }}
+                    onAfterDestroy={() => {
+                      Array.from(editorWordCountRef.current.children).forEach((child) =>
+                        child.remove()
+                      );
+                      Array.from(editorToolbarRef.current.children).forEach((child) =>
+                        child.remove()
+                      );
+                      Array.from(editorMenuBarRef.current.children).forEach((child) =>
+                        child.remove()
+                      );
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
