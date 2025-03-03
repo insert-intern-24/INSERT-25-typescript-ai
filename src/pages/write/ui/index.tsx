@@ -1,16 +1,11 @@
-import CKEditorComponent from '@/shared/components/CKEditor/index.tsx';
-import { useParams } from 'react-router-dom';
+import CKEditorComponent from "@/shared/components/CKEditor/index.tsx";
 
 const Write = () => {
-  // const { hashed_id } = useParams<{ hashed_id: string }>();
-  // console.log(hashed_id);
-  
-
   return (
     <>
       <CKEditorComponent />
     </>
-  )
-}
+  );
+};
 
-export default Write
+export default Write;
