@@ -331,6 +331,7 @@ export default function CKEditorComponent() {
     };
   }, [isLayoutReady]);
 
+
     return (
       <div className="main-container">
         <div
@@ -354,8 +355,28 @@ export default function CKEditorComponent() {
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(data, 'text/html');
                         const bodyContent = doc.body ? doc.body.innerHTML : '';
+                        // 각 태그에 ID를 부여하는 함수
+                        const addIdsToElements = (htmlString: string) => {
+                          const parser = new DOMParser();
+                          const doc = parser.parseFromString(htmlString, 'text/html');
+                          const allElements = doc.body.querySelectorAll('*');
+                        
+                          allElements.forEach((element, index) => {
+                          if (!element.id) {
+                            element.setAttribute('id', `e-${index}`);
+                          }
+                          });
+                        
+                          return doc.body.innerHTML;
+                        };
+                        
+                        // bodyContent에 ID 추가
+                        const bodyWithIds = addIdsToElements(bodyContent);
+                        
+                        // CKEditor 5의 content 추출 (ID가 추가된 HTML)
+                        console.log('Editor content changed:', bodyWithIds);
                         // CKditor 5의 content 추출
-                        console.log('Editor content changed:', bodyContent);
+                        // console.log('Editor content changed:', bodyContent);
                       });
                       editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                       editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
