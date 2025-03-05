@@ -386,12 +386,19 @@ export default function CKEditorComponent() {
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
+                  onFocus={() => {
+                    timer.start(3000);
+                  }}
                   onChange={(event, editor: DecoupledEditor) => {
+                    timer.start(3000);
                     const data = editor.getData();
                     setVirtualData(htmlToCustom(data));
-                    console.log('Editor content changed:', virtualData);
+                    console.log("Editor content changed:", virtualData);
                   }}
-                  onFocus={()=>timer.start(3000)}
+                  // onBlur={() => {
+                  //   timer.stop();
+                  //   update(virtualData ?? []);
+                  // }}
                 />
               )}
             </div>
