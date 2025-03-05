@@ -98,23 +98,26 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timer = new Timer();
-
-  interface editorOriginDataType {
+  // 파일 데이터 정의
+  interface fileDataType {
     title: string;
     content: string;
     hashed_id: string;
     updated_at: string;
   }
 
-  const [editorOriginData, setEditorOriginData] = useState<editorOriginDataType>({
+  // 파일 데이터 상태
+  const [fileData, setFileData] = useState<fileDataType>({
     title: "",
     content: "",
     hashed_id: "",
     updated_at: "",
   });
 
-  timer.on("done", () => console.log("done"));
+  // 에디터 미사용 액션
+  timer.on("done", () => update([]));
 
+  // 파일 데이터 호출
   useEffect(() => {
     (async () => {
       try {
@@ -126,8 +129,12 @@ export default function CKEditorComponent() {
           credentials: "include"
         });
         const data = await response.json();
-        setEditorOriginData(data);
-        console.log(data);
+
+        // 파일 데이터 설정
+        setFileData(data);
+        // 추후 파일 데이터와 zustand를 활용한 전역변수를 합칠 생각도 해야함
+        setValue(data.content);
+
         // CKEditor 준비 완료
         setIsLayoutReady(true);
         return () => setIsLayoutReady(false);      
@@ -306,7 +313,7 @@ export default function CKEditorComponent() {
             },
           ],
         },
-        initialData: `${editorOriginData.content}`,
+        initialData: `${fileData.content}`,
         licenseKey: LICENSE_KEY,
         link: {
           addTargetToExternalLinks: true,
@@ -346,7 +353,7 @@ export default function CKEditorComponent() {
           ref={editorContainerRef}
         >
           <S.WriteHeader>
-            <p className="title">{editorOriginData.title}</p>
+            <p className="title">{fileData.title}</p>
             <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
           </S.WriteHeader>
           <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
@@ -357,36 +364,6 @@ export default function CKEditorComponent() {
                   <CKEditor
                     onReady={(editor) => {
                       const wordCount = editor.plugins.get("WordCount");
-
-                      // 파일 데이터 변경 감지
-                      editor.model.document.on('change:data', () => {
-                        const data = editor.getData();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(data, 'text/html');
-                        const bodyContent = doc.body ? doc.body.innerHTML : '';
-                        // 각 태그에 ID를 부여하는 함수
-                        const addIdsToElements = (htmlString: string) => {
-                          const parser = new DOMParser();
-                          const doc = parser.parseFromString(htmlString, 'text/html');
-                          const allElements = doc.body.querySelectorAll('*');
-                        
-                          allElements.forEach((element, index) => {
-                          if (!element.id) {
-                            element.setAttribute('id', `e-${index}`);
-                          }
-                          });
-                        
-                          return doc.body.innerHTML;
-                        };
-                        
-                        // bodyContent에 ID 추가
-                        const bodyWithIds = addIdsToElements(bodyContent);
-                        
-                        // CKEditor 5의 content 추출 (ID가 추가된 HTML)
-                        console.log('Editor content changed:', bodyWithIds);
-                        // CKditor 5의 content 추출
-                        // console.log('Editor content changed:', bodyContent);
-                      });
                       editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                       editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
                       editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
@@ -404,7 +381,12 @@ export default function CKEditorComponent() {
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
-                  onChange={()=>timer.start(3000)}
+                  onChange={(event, editor: DecoupledEditor) => {
+                    const data = editor.getData();
+                    setVirtualData(htmlToCustom(data));
+                    console.log('Editor content changed:', virtualData);
+                  }}
+                  onFocus={()=>timer.start(3000)}
                 />
               )}
             </div>
