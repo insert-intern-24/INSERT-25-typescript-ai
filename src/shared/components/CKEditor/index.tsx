@@ -81,6 +81,7 @@ import {
 import "ckeditor5/ckeditor5.css";
 
 import "./style.css";
+import { useDiff } from "@/shared/stores/useDiff";
 import * as S from "./WriteHeader/style";
 import Timer from "tiny-timer";
 
@@ -355,6 +356,8 @@ export default function CKEditorComponent() {
                   <CKEditor
                     onReady={(editor) => {
                       const wordCount = editor.plugins.get("WordCount");
+
+                      // 파일 데이터 변경 감지
                       editor.model.document.on('change:data', () => {
                         const data = editor.getData();
                         const parser = new DOMParser();
