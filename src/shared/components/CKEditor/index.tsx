@@ -82,6 +82,7 @@ import "ckeditor5/ckeditor5.css";
 
 import "./style.css";
 import * as S from "./WriteHeader/style";
+import Timer from "tiny-timer";
 
 // const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 const LICENSE_KEY = "GPL";
@@ -94,6 +95,7 @@ export default function CKEditorComponent() {
   const editorWordCountRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
+  const timer = new Timer();
 
   interface editorOriginDataType {
     title: string;
@@ -108,6 +110,8 @@ export default function CKEditorComponent() {
     hashed_id: "",
     updated_at: "",
   });
+
+  timer.on("done", () => console.log("done"));
 
   useEffect(() => {
     (async () => {
@@ -130,6 +134,7 @@ export default function CKEditorComponent() {
       }
     })();
   }, []);
+
 
   const { editorConfig } = useMemo(() => {
     if (!isLayoutReady) {
@@ -395,6 +400,7 @@ export default function CKEditorComponent() {
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
+                  onChange={()=>timer.start(3000)}
                 />
               )}
             </div>
