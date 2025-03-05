@@ -98,6 +98,8 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timer = new Timer();
+  const { update, setValue } = useDiff();
+  const [virtualData, setVirtualData] = useState<string[]>([]);
   // 파일 데이터 정의
   interface fileDataType {
     title: string;
@@ -115,7 +117,9 @@ export default function CKEditorComponent() {
   });
 
   // 에디터 미사용 액션
-  timer.on("done", () => update([]));
+  timer.on("done", () => {
+    update(virtualData ?? []);
+  });
 
   // 파일 데이터 호출
   useEffect(() => {
@@ -364,6 +368,7 @@ export default function CKEditorComponent() {
                   <CKEditor
                     onReady={(editor) => {
                       const wordCount = editor.plugins.get("WordCount");
+                      setVirtualData(htmlToCustom(editor.getData()));
                       editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                       editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
                       editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
