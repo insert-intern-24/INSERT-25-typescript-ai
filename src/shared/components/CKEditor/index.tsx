@@ -398,9 +398,9 @@ export default function CKEditorComponent() {
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
-                  onFocus={() => {
-                    timerRef.current.start(3000);
-                  }}
+                  // onFocus={() => {
+                  //   timerRef.current.start(3000);
+                  // }}
                   onChange={(event, editor: DecoupledEditor) => {
                     // 타이머 재시작
                     timerRef.current.stop();
