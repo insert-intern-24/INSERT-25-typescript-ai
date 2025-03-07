@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import {
   DecoupledEditor,
@@ -97,7 +97,7 @@ export default function CKEditorComponent() {
   const editorWordCountRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
-  const timer = new Timer();
+  const timerRef = useRef(new Timer());
   const { update, setValue } = useDiff();
   const [virtualData, setVirtualData] = useState<string[]>([]);
   // 파일 데이터 정의
@@ -116,10 +116,21 @@ export default function CKEditorComponent() {
     updated_at: "",
   });
 
-  // 에디터 미사용 액션
-  timer.on("done", () => {
-    update(virtualData ?? []);
-  });
+  // 타이머 설정 및 정리
+  useEffect(() => {
+    const timer = timerRef.current;
+
+    // 에디터 미사용 액션
+    timer.on("done", () => {
+      const currentVirtualData = htmlToCustom(editorRef.current?.instance?.getData() || "");
+      update(currentVirtualData);
+    });
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      timer.stop();
+    };
+  }, [update]);
 
   // 파일 데이터 호출
   useEffect(() => {
@@ -130,7 +141,7 @@ export default function CKEditorComponent() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include"
+          credentials: "include",
         });
         const data = await response.json();
 
@@ -141,13 +152,12 @@ export default function CKEditorComponent() {
 
         // CKEditor 준비 완료
         setIsLayoutReady(true);
-        return () => setIsLayoutReady(false);      
+        return () => setIsLayoutReady(false);
       } catch (error) {
         console.error("Error:", error);
       }
     })();
   }, []);
-
 
   const { editorConfig } = useMemo(() => {
     if (!isLayoutReady) {
@@ -349,56 +359,65 @@ export default function CKEditorComponent() {
     };
   }, [isLayoutReady]);
 
+  return (
+    <div className="main-container">
+      <div
+        className="editor-container editor-container_document-editor editor-container_include-word-count"
+        ref={editorContainerRef}
+      >
+        <S.WriteHeader>
+          <p className="title">{fileData.title}</p>
+          <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
+        </S.WriteHeader>
+        <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
+        <div className="editor-container__editor-wrapper">
+          <div className="editor-container__editor">
+            <div ref={editorRef}>
+              {editorConfig && (
+                <CKEditor
+                  onReady={(editor) => {
+                    // 에디터 인스턴스 저장
+                    editorRef.current.instance = editor;
 
-    return (
-      <div className="main-container">
-        <div
-          className="editor-container editor-container_document-editor editor-container_include-word-count"
-          ref={editorContainerRef}
-        >
-          <S.WriteHeader>
-            <p className="title">{fileData.title}</p>
-            <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
-          </S.WriteHeader>
-          <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
-          <div className="editor-container__editor-wrapper">
-            <div className="editor-container__editor">
-              <div ref={editorRef}>
-                {editorConfig && (
-                  <CKEditor
-                    onReady={(editor) => {
-                      const wordCount = editor.plugins.get("WordCount");
-                      setVirtualData(htmlToCustom(editor.getData()));
-                      editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-                      editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
-                      editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
-                    }}
-                    onAfterDestroy={() => {
-                      Array.from(editorWordCountRef.current.children).forEach((child) =>
-                        child.remove()
-                      );
-                      Array.from(editorToolbarRef.current.children).forEach((child) =>
-                        child.remove()
-                      );
-                      Array.from(editorMenuBarRef.current.children).forEach((child) =>
-                        child.remove()
-                      );
+                    const wordCount = editor.plugins.get("WordCount");
+                    setVirtualData(htmlToCustom(editor.getData()));
+                    editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+                    editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
+                    editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+                  }}
+                  onAfterDestroy={() => {
+                    Array.from(editorWordCountRef.current.children).forEach((child) =>
+                      child.remove()
+                    );
+                    Array.from(editorToolbarRef.current.children).forEach((child) =>
+                      child.remove()
+                    );
+                    Array.from(editorMenuBarRef.current.children).forEach((child) =>
+                      child.remove()
+                    );
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
                   onFocus={() => {
-                    timer.start(3000);
+                    timerRef.current.start(3000);
                   }}
                   onChange={(event, editor: DecoupledEditor) => {
-                    timer.start(3000);
+                    // 타이머 재시작
+                    timerRef.current.stop();
+                    timerRef.current.start(3000);
+
+                    // virtualData 업데이트
                     const data = editor.getData();
-                    setVirtualData(htmlToCustom(data));
-                    console.log("Editor content changed:", virtualData);
+                    const customData = htmlToCustom(data);
+                    setVirtualData(customData);
                   }}
-                  // onBlur={() => {
-                  //   timer.stop();
-                  //   update(virtualData ?? []);
-                  // }}
+                  onBlur={() => {
+                    // 포커스를 잃으면 타이머 중지 및 즉시 업데이트
+                    timerRef.current.stop();
+                    const data = editorRef.current.instance.getData();
+                    const customData = htmlToCustom(data);
+                    update(customData);
+                  }}
                 />
               )}
             </div>
