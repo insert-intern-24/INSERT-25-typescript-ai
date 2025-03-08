@@ -89,6 +89,13 @@ import { htmlToCustom } from "@/utils/htmlToCustom";
 // const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 const LICENSE_KEY = "GPL";
 
+function grantIdToEditorDiv(){
+  const editorDiv = document.querySelector(".ck-editor__editable");
+  if (editorDiv && !editorDiv.hasAttribute("id")) {
+    editorDiv.setAttribute("id", "custom-editor-id");
+  }
+}
+
 export default function CKEditorComponent() {
   const editorContainerRef = useRef(null);
   const editorMenuBarRef = useRef(null);
