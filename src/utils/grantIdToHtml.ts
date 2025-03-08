@@ -1,4 +1,4 @@
-export const htmlToCustom = (htmlString: string) => {
+export const grantIdToHtml = (htmlString: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
   return Array.from(doc.body.children).map((element, index) => {

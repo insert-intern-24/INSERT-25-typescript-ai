@@ -82,19 +82,12 @@ import "ckeditor5/ckeditor5.css";
 
 import "./style.css";
 import { useDiff } from "@/shared/stores/useDiff";
+import generateUniqueId from "@/utils/generateUniqueId";
 import * as S from "./WriteHeader/style";
 import Timer from "tiny-timer";
-import { htmlToCustom } from "@/utils/htmlToCustom";
 
 // const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 const LICENSE_KEY = "GPL";
-
-function grantIdToEditorDiv(){
-  const editorDiv = document.querySelector(".ck-editor__editable");
-  if (editorDiv && !editorDiv.hasAttribute("id")) {
-    editorDiv.setAttribute("id", "custom-editor-id");
-  }
-}
 
 export default function CKEditorComponent() {
   const editorContainerRef = useRef(null);
@@ -106,7 +99,7 @@ export default function CKEditorComponent() {
   const { hashed_id } = useParams();
   const timerRef = useRef(new Timer());
   const { update, setValue } = useDiff();
-  const [virtualData, setVirtualData] = useState<string[]>([]);
+
   // 파일 데이터 정의
   interface fileDataType {
     title: string;
@@ -114,7 +107,7 @@ export default function CKEditorComponent() {
     hashed_id: string;
     updated_at: string;
   }
-
+  
   // 파일 데이터 상태
   const [fileData, setFileData] = useState<fileDataType>({
     title: "",
@@ -122,14 +115,36 @@ export default function CKEditorComponent() {
     hashed_id: "",
     updated_at: "",
   });
-
+  
+  // 에디터 div에 id 부여
+  const grantIdToEditorDiv = () => {
+    const editorDiv = document.querySelector(".ck-editor__editable");
+    if (editorDiv && !editorDiv.hasAttribute("id")) {
+      editorDiv.setAttribute("id", "custom-editor-id");
+    }
+  };  
+  
+  function grantDataUnique() {
+    const parentDiv = document.getElementById("custom-editor-id");
+    
+    if (parentDiv) {
+      parentDiv.querySelectorAll("*").forEach((el) => {
+        if (!el.hasAttribute("data-unique")) {
+          el.setAttribute("data-unique", generateUniqueId());
+        }
+      });
+    }
+    console.log(parentDiv);
+  };
+  
   // 타이머 설정 및 정리
   useEffect(() => {
     const timer = timerRef.current;
 
     // 에디터 미사용 액션
     timer.on("done", () => {
-      const currentVirtualData = htmlToCustom(editorRef.current?.instance?.getData() || "");
+      grantDataUnique();
+      const currentVirtualData = editorRef.current?.instance?.getData() || "";
       update(currentVirtualData);
     });
 
@@ -327,12 +342,17 @@ export default function CKEditorComponent() {
         htmlSupport: {
           allow: [
             {
-              name: /^.*$/,
+              name: /.*/,  // 정규식 표현을 수정하여 모든 태그를 명시적으로 포함
+              attributes: {
+                id: true,
+                'data-unique': true,
+                // 필요한 다른 속성도 여기에 추가 가능
+              },
               styles: true,
-              attributes: true,
-              classes: true,
-            },
+              classes: true
+            }
           ],
+          disallow: [] // 명시적으로 비허용 목록을 빈 배열로 설정
         },
         initialData: `${fileData.content}`,
         licenseKey: LICENSE_KEY,
@@ -385,12 +405,11 @@ export default function CKEditorComponent() {
                   onReady={(editor) => {
                     // 에디터 인스턴스 저장
                     editorRef.current.instance = editor;
-
                     const wordCount = editor.plugins.get("WordCount");
-                    setVirtualData(htmlToCustom(editor.getData()));
                     editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                     editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
                     editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+                    grantIdToEditorDiv();
                   }}
                   onAfterDestroy={() => {
                     Array.from(editorWordCountRef.current.children).forEach((child) =>
@@ -405,25 +424,10 @@ export default function CKEditorComponent() {
                   }}
                   editor={DecoupledEditor}
                   config={editorConfig}
-                  // onFocus={() => {
-                  //   timerRef.current.start(3000);
-                  // }}
                   onChange={(event, editor: DecoupledEditor) => {
                     // 타이머 재시작
                     timerRef.current.stop();
                     timerRef.current.start(3000);
-
-                    // virtualData 업데이트
-                    const data = editor.getData();
-                    const customData = htmlToCustom(data);
-                    setVirtualData(customData);
-                  }}
-                  onBlur={() => {
-                    // 포커스를 잃으면 타이머 중지 및 즉시 업데이트
-                    timerRef.current.stop();
-                    const data = editorRef.current.instance.getData();
-                    const customData = htmlToCustom(data);
-                    update(customData);
                   }}
                 />
               )}
