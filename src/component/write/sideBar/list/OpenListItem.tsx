@@ -46,7 +46,7 @@ const OpenListItemBox = styled.div`
   padding: 10px 6px 10px 10px;
   align-items: flex-start;
   gap: 10px;
-  border-bottom: 1px solid var(--border-color, #e2e2e2);
+  border-bottom: 1px #e2e2e2;
   background: #fff;
 `;
 
@@ -74,7 +74,7 @@ const RefineBox = styled.div`
 `;
 
 const RefineTest = styled.span`
-  color: var(--text-color, #2b2b2b);
+  color: #2b2b2b;
   font-family: "Noto Sans KR";
   font-size: 16px;
   font-style: normal;
@@ -82,12 +82,12 @@ const RefineTest = styled.span`
   line-height: normal;
 `;
 const DeleteText = styled(RefineTest)`
-  color: var(--description-color, #afb1c3);
+  color: #afb1c3;
   text-decoration: line-through;
 `;
 
 const RefinedText = styled(RefineTest)`
-  color: var(--primary-color, #05a569);
+  color: #05a569;
 `;
 
 const Buttons = styled.div`
@@ -103,7 +103,7 @@ const RefineButton = styled.button`
   align-items: center;
   gap: 8px;
   border-radius: 4px;
-  background: var(--primary-color, #05a569);
+  background: #05a569;
   border: none;
 `;
 
@@ -121,7 +121,7 @@ const RefusalButton = styled(RefineButton)`
 `;
 
 const RefusalButtonText = styled(RefineButtonText)`
-  color: var(--description-color, #afb1c3);
+  color: #afb1c3;
 `;
 
 const ListItemBox = styled.div`
@@ -131,7 +131,7 @@ const ListItemBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--border-color, #e2e2e2);
+  border-bottom: 1px solid #e2e2e2;
   background: #fff;
 `;
 
@@ -150,7 +150,7 @@ const ContextBox = styled.div`
 `;
 
 const Description = styled.span`
-  color: var(--description-color, #afb1c3);
+  color: #afb1c3;
   font-family: "Noto Sans KR";
   font-size: 12px;
   font-style: normal;
@@ -159,7 +159,7 @@ const Description = styled.span`
 `;
 
 const Text = styled.span`
-  color: var(--text-color, #2b2b2b);
+  color: #2b2b2b;
   font-family: "Noto Sans KR";
   font-size: 16px;
   font-style: normal;

@@ -24,7 +24,7 @@ const ListItemBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid var(--border-color, #e2e2e2);
+  border-bottom: 1px solid #e2e2e2;
   background: #fff;
 `;
 
@@ -43,7 +43,7 @@ const ContextBox = styled.div`
 `;
 
 const Description = styled.span`
-  color: var(--description-color, #afb1c3);
+  color: #afb1c3;
   font-family: "Noto Sans KR";
   font-size: 12px;
   font-style: normal;
@@ -52,7 +52,7 @@ const Description = styled.span`
 `;
 
 const Text = styled.span`
-  color: var(--text-color, #2b2b2b);
+  color: #2b2b2b;
   font-family: "Noto Sans KR";
   font-size: 16px;
   font-style: normal;

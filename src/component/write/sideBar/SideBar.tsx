@@ -21,6 +21,6 @@ const SideBarBox = styled.div`
   min-width: 500px;
   min-height: 1003px;
   flex-shrink: 0;
-  border-left: 1px solid var(--border-color, #e2e2e2);
+  border-left: 1px solid #e2e2e2;
   background: #fff;
 `;
