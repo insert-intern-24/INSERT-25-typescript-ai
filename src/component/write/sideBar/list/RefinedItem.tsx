@@ -1,0 +1,72 @@
+import React from "react";
+import styled from "styled-components";
+import success from "../../../../../public/images/icon/success.svg";
+
+export default function RefinedItem() {
+  return (
+    <>
+      <RefinedItemBox>
+        <ListContentBox>
+          <Success src={success} alt="success" />
+          <ContextBox>
+            <Description></Description>
+            <Text></Text>
+            <RefinedText></RefinedText>
+          </ContextBox>
+        </ListContentBox>
+      </RefinedItemBox>
+    </>
+  );
+}
+
+const RefinedItemBox = styled.div`
+  display: flex;
+  min-width: 480px;
+  min-height: 130px;
+  padding: 10px 6px 10px 10px;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-color, #e2e2e2);
+  background: #fff;
+`;
+
+const ListContentBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+`;
+
+const ContextBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+`;
+
+const Description = styled.span`
+  color: var(--description-color, #afb1c3);
+  font-family: "Noto Sans KR";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+`;
+
+const Text = styled.span`
+  color: var(--text-color, #2b2b2b);
+  font-family: "Noto Sans KR";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+const RefinedText = styled(Text)`
+  color: var(--primary-color, #05a569);
+`;
+
+const Success = styled.img`
+  width: 26px;
+  height: 26px;
+`;
