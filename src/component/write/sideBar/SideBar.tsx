@@ -1,25 +1,17 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import TabsBlock from "./tabs/TabsBlock";
 import ListItem from "./list/ListItem";
 import OpenListItem from "./list/OpenListItem";
+import RefinedItem from "./list/RefinedItem";
 
 export default function SideBar() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const handleItemClick = (index: number) => {
-    setOpenIndex(index === openIndex ? null : index);
-  };
-
   return (
     <>
       <SideBarBox>
         <TabsBlock />
-        {[...Array(6)].map((_, index) => (
-          <div key={index} onClick={() => handleItemClick(index)}>
-            {openIndex === index ? <OpenListItem /> : <ListItem />}
-          </div>
-        ))}
+        <ListItem />
+        <OpenListItem />
+        <RefinedItem />
       </SideBarBox>
     </>
   );
