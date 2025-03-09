@@ -81,7 +81,7 @@ import {
 import "ckeditor5/ckeditor5.css";
 
 import "./style.css";
-import { useDiff } from "@/shared/stores/useDiff";
+import { useDocument } from "@/shared/stores/useDocument";
 import generateUniqueId from "@/utils/generateUniqueId";
 import * as S from "./WriteHeader/style";
 import Timer from "tiny-timer";
@@ -98,7 +98,7 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timerRef = useRef(new Timer());
-  const { update, setValue } = useDiff();
+  const { updateDocument, initDocument } = useDocument();
 
   // 파일 데이터 정의
   interface fileDataType {
@@ -127,7 +127,6 @@ export default function CKEditorComponent() {
         }
       });
     }
-    console.log(parentDiv);
   };
   // 타이머 설정 및 정리
   useEffect(() => {
@@ -137,14 +136,14 @@ export default function CKEditorComponent() {
     timer.on("done", () => {
       grantDataUnique();
       const currentVirtualData = editorRef.current?.instance?.getData() || "";
-      update(currentVirtualData);
+      updateDocument(currentVirtualData);
     });
 
     // 컴포넌트 언마운트 시 타이머 정리
     return () => {
       timer.stop();
     };
-  }, [update]);
+  }, [updateDocument]);
 
   // 파일 데이터 호출
   useEffect(() => {
@@ -162,7 +161,7 @@ export default function CKEditorComponent() {
         // 파일 데이터 설정
         setFileData(data);
         // 추후 파일 데이터와 zustand를 활용한 전역변수를 합칠 생각도 해야함
-        setValue(data.content);
+        initDocument(data.content);
 
         // CKEditor 준비 완료
         setIsLayoutReady(true);
