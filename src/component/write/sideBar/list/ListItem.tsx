@@ -9,8 +9,8 @@ export default function ListItem() {
         <ListContentBox>
           <Loanword src={loanword} alt="loanword" />
           <ContextBox>
-            <Description></Description>
-            <Text></Text>
+            <Description>불필요한 줄임말 외래어 사용</Description>
+            <Text>노잼</Text>
           </ContextBox>
         </ListContentBox>
       </ListItemBox>
@@ -20,7 +20,6 @@ export default function ListItem() {
 const ListItemBox = styled.div`
   display: flex;
   min-width: 480px;
-  min-height: 55px;
   padding: 10px 6px;
   flex-direction: column;
   justify-content: space-between;

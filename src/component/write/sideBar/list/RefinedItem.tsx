@@ -9,9 +9,9 @@ export default function RefinedItem() {
         <ListContentBox>
           <Success src={success} alt="success" />
           <ContextBox>
-            <Description></Description>
-            <Text></Text>
-            <RefinedText></RefinedText>
+            <Description>수정한 단어</Description>
+            <Text>노잼 → </Text>
+            <RefinedText>재미가 없는, 흥미가 퇴색된</RefinedText>
           </ContextBox>
         </ListContentBox>
       </RefinedItemBox>
@@ -22,7 +22,6 @@ export default function RefinedItem() {
 const RefinedItemBox = styled.div`
   display: flex;
   min-width: 480px;
-  min-height: 130px;
   padding: 10px 6px 10px 10px;
   align-items: flex-start;
   gap: 10px;
