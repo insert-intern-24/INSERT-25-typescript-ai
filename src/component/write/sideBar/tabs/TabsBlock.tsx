@@ -35,6 +35,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
+  user-select: none;
 `;
 const Text = styled.span`
   color: #2b2b2b;

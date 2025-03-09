@@ -22,8 +22,9 @@ export default function OpenListItem() {
           <RefineBox>
             <RefineTest>나는 이 일을</RefineTest>
             <DeleteText>핸들링</DeleteText>
-            <RefinedText>처리</RefinedText>
-            <RefineTest>할 수 있어</RefineTest>
+            <RefinedText>
+              처리<RefineTest>할 수 있어</RefineTest>
+            </RefinedText>
           </RefineBox>
           <Buttons>
             <RefineButton>
@@ -61,6 +62,7 @@ const OpenListBox = styled.div`
 const Line = styled.img`
   width: 4px;
   height: 100%;
+  user-select: none;
 `;
 
 const RefineBox = styled.div`
@@ -94,6 +96,7 @@ const Buttons = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 4px;
+  user-select: none;
 `;
 
 const RefineButton = styled.button`
@@ -170,4 +173,5 @@ const Text = styled.span`
 const Loanword = styled.img`
   width: 26px;
   height: 26px;
+  user-select: none;
 `;

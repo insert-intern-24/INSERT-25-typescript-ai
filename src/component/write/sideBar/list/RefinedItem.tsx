@@ -10,8 +10,9 @@ export default function RefinedItem() {
           <Success src={success} alt="success" />
           <ContextBox>
             <Description>수정한 단어</Description>
-            <Text>노잼 → </Text>
-            <RefinedText>재미가 없는, 흥미가 퇴색된</RefinedText>
+            <Text>
+              노잼 → <RefinedText>재미가 없는, 흥미가 퇴색된</RefinedText>
+            </Text>
           </ContextBox>
         </ListContentBox>
       </RefinedItemBox>
@@ -34,6 +35,7 @@ const ListContentBox = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
+  width: 100%;
 `;
 
 const ContextBox = styled.div`
@@ -41,6 +43,7 @@ const ContextBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  width: 100%;
 `;
 
 const Description = styled.span`
@@ -68,4 +71,5 @@ const RefinedText = styled(Text)`
 const Success = styled.img`
   width: 26px;
   height: 26px;
+  user-select: none;
 `;

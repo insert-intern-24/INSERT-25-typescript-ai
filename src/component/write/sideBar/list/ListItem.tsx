@@ -63,4 +63,5 @@ const Text = styled.span`
 const Loanword = styled.img`
   width: 26px;
   height: 26px;
+  user-select: none;
 `;
