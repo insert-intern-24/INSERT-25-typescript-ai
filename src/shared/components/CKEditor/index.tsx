@@ -116,19 +116,12 @@ export default function CKEditorComponent() {
     updated_at: "",
   });
   
-  // 에디터 div에 id 부여
-  const grantIdToEditorDiv = () => {
-    const editorDiv = document.querySelector(".ck-editor__editable");
-    if (editorDiv && !editorDiv.hasAttribute("id")) {
-      editorDiv.setAttribute("id", "custom-editor-id");
-    }
-  };  
-  
   function grantDataUnique() {
     const parentDiv = document.querySelector(".ck-editor__editable");
     
     if (parentDiv) {
-      parentDiv.querySelectorAll("*").forEach((el) => {
+      // Only select direct children using :scope > *
+      parentDiv.querySelectorAll(":scope > *").forEach((el) => {
         if (!el.hasAttribute("data-unique")) {
           el.setAttribute("data-unique", generateUniqueId());
         }
@@ -136,7 +129,6 @@ export default function CKEditorComponent() {
     }
     console.log(parentDiv);
   };
-  
   // 타이머 설정 및 정리
   useEffect(() => {
     const timer = timerRef.current;
@@ -411,7 +403,6 @@ export default function CKEditorComponent() {
                     editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                     editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
                     editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
-                    grantIdToEditorDiv();
                   }}
                   onAfterDestroy={() => {
                     Array.from(editorWordCountRef.current.children).forEach((child) =>
