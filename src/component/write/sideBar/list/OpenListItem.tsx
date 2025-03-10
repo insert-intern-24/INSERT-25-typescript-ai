@@ -1,6 +1,14 @@
 import styled from "styled-components";
-import line from "../../../../../public/images/icon/line.svg";
-import loanword from "../../../../../public/images/icon/loanword.svg";
+import line from "/public/images/icon/line.svg";
+import loanword from "/public/images/icon/loanword.svg";
+import * as All from "./ListItem";
+
+const word = [
+  {
+    default: "핸들링",
+    refine: "처리",
+  },
+];
 
 export default function OpenListItem() {
   return (
@@ -8,22 +16,24 @@ export default function OpenListItem() {
       <OpenListItemBox>
         <Line src={line} alt="line" />
         <OpenListBox>
-          <ListItemBox>
-            <ListContentBox>
-              <Loanword src={loanword} alt="loanword" />
-              <ContextBox>
-                <Description>외래어 직역 표현</Description>
-                <Text>
-                  핸들링 → <RefinedText>처리</RefinedText>
-                </Text>
-              </ContextBox>
-            </ListContentBox>
-          </ListItemBox>
+          <All.ListItemBox>
+            <All.ListContentBox>
+              <All.Loanword src={loanword} alt="loanword" />
+              <All.ContextBox>
+                <All.Description>외래어 직역 표현</All.Description>
+                <All.Text>
+                  {word[0].default} →{" "}
+                  <RefinedText>{word[0].refine}</RefinedText>
+                </All.Text>
+              </All.ContextBox>
+            </All.ListContentBox>
+          </All.ListItemBox>
           <RefineBox>
             <RefineTest>나는 이 일을</RefineTest>
-            <DeleteText>핸들링</DeleteText>
+            <DeleteText>{word[0].default}</DeleteText>
             <RefinedText>
-              처리<RefineTest>할 수 있어</RefineTest>
+              {word[0].refine}
+              <RefineTest>할 수 있어</RefineTest>
             </RefinedText>
           </RefineBox>
           <Buttons>
@@ -125,53 +135,4 @@ const RefusalButton = styled(RefineButton)`
 
 const RefusalButtonText = styled(RefineButtonText)`
   color: #afb1c3;
-`;
-
-const ListItemBox = styled.div`
-  display: flex;
-  min-width: 480px;
-  padding: 10px 6px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 1px solid #e2e2e2;
-  background: #fff;
-`;
-
-const ListContentBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-`;
-
-const ContextBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-`;
-
-const Description = styled.span`
-  color: #afb1c3;
-  font-family: "Noto Sans KR";
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-`;
-
-const Text = styled.span`
-  color: #2b2b2b;
-  font-family: "Noto Sans KR";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-`;
-
-const Loanword = styled.img`
-  width: 26px;
-  height: 26px;
-  user-select: none;
 `;
