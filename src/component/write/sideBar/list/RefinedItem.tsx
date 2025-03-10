@@ -1,8 +1,16 @@
 import styled from "styled-components";
 import success from "/public/images/icon/success.svg";
-import * as All from "./ListItem";
+import * as All from "./ErrorListItem";
 
-export default function RefinedItem() {
+interface RefinedItemProps {
+  default: string;
+  refine: string;
+}
+
+export default function RefinedItem({
+  default: def,
+  refine,
+}: RefinedItemProps) {
   return (
     <>
       <RefinedItemBox>
@@ -11,7 +19,7 @@ export default function RefinedItem() {
           <All.ContextBox>
             <All.Description>수정한 단어</All.Description>
             <All.Text>
-              노잼 → <RefinedText>재미가 없는, 흥미가 퇴색된</RefinedText>
+              {def} → <RefinedText>{refine}</RefinedText>
             </All.Text>
           </All.ContextBox>
         </ListContentBox>
@@ -22,7 +30,7 @@ export default function RefinedItem() {
 
 const RefinedItemBox = styled.div`
   display: flex;
-  min-width: 480px;
+  width: 100%;
   padding: 10px 6px 10px 10px;
   align-items: flex-start;
   gap: 10px;

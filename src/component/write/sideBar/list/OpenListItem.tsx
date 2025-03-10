@@ -1,16 +1,19 @@
 import styled from "styled-components";
 import line from "/public/images/icon/line.svg";
 import loanword from "/public/images/icon/loanword.svg";
-import * as All from "./ListItem";
+import * as All from "./ErrorListItem";
 
-const word = [
-  {
-    default: "핸들링",
-    refine: "처리",
-  },
-];
+interface OpenListItemProps {
+  default: string;
+  refine: string;
+  description: string;
+}
 
-export default function OpenListItem() {
+export default function OpenListItem({
+  default: def,
+  refine,
+  description,
+}: OpenListItemProps) {
   return (
     <>
       <OpenListItemBox>
@@ -20,19 +23,18 @@ export default function OpenListItem() {
             <All.ListContentBox>
               <All.Loanword src={loanword} alt="loanword" />
               <All.ContextBox>
-                <All.Description>외래어 직역 표현</All.Description>
+                <All.Description>{description}</All.Description>
                 <All.Text>
-                  {word[0].default} →{" "}
-                  <RefinedText>{word[0].refine}</RefinedText>
+                  {def} → <RefinedText>{refine}</RefinedText>
                 </All.Text>
               </All.ContextBox>
             </All.ListContentBox>
           </All.ListItemBox>
           <RefineBox>
             <RefineTest>나는 이 일을</RefineTest>
-            <DeleteText>{word[0].default}</DeleteText>
+            <DeleteText>{def}</DeleteText>
             <RefinedText>
-              {word[0].refine}
+              {refine}
               <RefineTest>할 수 있어</RefineTest>
             </RefinedText>
           </RefineBox>
@@ -52,8 +54,8 @@ export default function OpenListItem() {
 
 const OpenListItemBox = styled.div`
   display: flex;
-  min-width: 480px;
-  min-height: 130px;
+  width: 100%;
+  height: 100%;
   padding: 10px 6px 10px 10px;
   align-items: flex-start;
   gap: 10px;
