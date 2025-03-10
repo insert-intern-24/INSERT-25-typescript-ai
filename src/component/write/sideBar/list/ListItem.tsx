@@ -1,5 +1,4 @@
-import React from "react";
-import loanword from "../../../../../public/images/icon/loanword.svg";
+import loanword from "/public/images/icon/loanword.svg";
 import styled from "styled-components";
 
 export default function ListItem() {
@@ -17,7 +16,7 @@ export default function ListItem() {
     </>
   );
 }
-const ListItemBox = styled.div`
+export const ListItemBox = styled.div`
   display: flex;
   min-width: 480px;
   padding: 10px 6px;
@@ -28,21 +27,21 @@ const ListItemBox = styled.div`
   background: #fff;
 `;
 
-const ListContentBox = styled.div`
+export const ListContentBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
 `;
 
-const ContextBox = styled.div`
+export const ContextBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
 `;
 
-const Description = styled.span`
+export const Description = styled.span`
   color: #afb1c3;
   font-family: "Noto Sans KR";
   font-size: 12px;
@@ -51,7 +50,7 @@ const Description = styled.span`
   line-height: normal;
 `;
 
-const Text = styled.span`
+export const Text = styled.span`
   color: #2b2b2b;
   font-family: "Noto Sans KR";
   font-size: 16px;
@@ -60,7 +59,7 @@ const Text = styled.span`
   line-height: normal;
 `;
 
-const Loanword = styled.img`
+export const Loanword = styled.img`
   width: 26px;
   height: 26px;
   user-select: none;
