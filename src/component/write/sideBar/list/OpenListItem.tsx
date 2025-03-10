@@ -72,9 +72,8 @@ const OpenListBox = styled.div`
 `;
 
 const Line = styled.img`
-  width: 4px;
-  height: 100%;
   user-select: none;
+  min-height: 12vh;
 `;
 
 const RefineBox = styled.div`
