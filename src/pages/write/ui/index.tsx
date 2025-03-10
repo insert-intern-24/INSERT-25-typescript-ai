@@ -1,11 +1,11 @@
-import CKEditer from '@/shared/components/CKEditer/index.tsx';
+import CKEditorComponent from "@/shared/components/CKEditor/index.tsx";
 
 const Write = () => {
   return (
     <>
-      <CKEditer />
+      <CKEditorComponent />
     </>
-  )
-}
+  );
+};
 
-export default Write
+export default Write;

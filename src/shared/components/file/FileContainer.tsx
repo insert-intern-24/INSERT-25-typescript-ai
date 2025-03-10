@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import IconSortImage from "../../../public/images/icon/icon-sort.svg";
-import ListSortImage from "../../../public/images/icon/list-sort.svg";
+import IconSortImage from "/public/images/icon/icon-sort.svg";
+import ListSortImage from "/public/images/icon/list-sort.svg";
 import IconSort from "./sort/IconSort";
 import ListSort from "./sort/ListSort";
 
