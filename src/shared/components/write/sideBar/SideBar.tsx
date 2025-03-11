@@ -21,22 +21,31 @@ export default function SideBar() {
     <>
       <SideBarBox>
         <TabsBlock />
-        <ListItem default={word[1].default} description={word[1].description} />
-        <OpenListItem
-          default={word[0].default}
-          refine={word[0].refine}
-          description={word[0].description}
-        />
-        <RefinedItem default={word[1].default} refine={word[1].refine} />
+        <SideBarMain>
+          <ListItem
+            default={word[1].default}
+            description={word[1].description}
+          />
+          <OpenListItem
+            default={word[0].default}
+            refine={word[0].refine}
+            description={word[0].description}
+          />
+          <RefinedItem default={word[1].default} refine={word[1].refine} />
+        </SideBarMain>
       </SideBarBox>
     </>
   );
 }
 
 const SideBarBox = styled.div`
-  max-width: 500px;
-  max-height: 1003px;
-  flex-shrink: 0;
+  width: 100%;
+  max-width: 30dvw;
+  max-height: 100%;
   border-left: 1px solid #e2e2e2;
   background: #fff;
+`;
+
+const SideBarMain = styled.main`
+  border-top: 1px solid #e2e2e2;
 `;

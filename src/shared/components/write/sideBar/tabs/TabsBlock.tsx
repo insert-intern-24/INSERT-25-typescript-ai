@@ -27,8 +27,10 @@ const BlockBox = styled.div`
   padding: 10px 20px;
   align-items: center;
   gap: 5px;
-  border: 1px solid #e2e2e2;
+  border-right: 1px solid #e2e2e2;
   background: #f3f6f3;
+  max-height: 38.063px;
+  box-sizing: border-box;
 `;
 
 const Content = styled.div`
