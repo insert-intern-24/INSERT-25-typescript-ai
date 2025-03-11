@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import line from "/public/images/icon/line.svg";
 import loanword from "/public/images/icon/loanword.svg";
 import * as All from "./ErrorListItem";
 
@@ -17,7 +16,7 @@ export default function OpenListItem({
   return (
     <>
       <OpenListItemBox>
-        <Line src={line} alt="line" />
+        <Line />
         <OpenListBox>
           <All.ListItemBox>
             <All.ListContentBox>
@@ -71,9 +70,11 @@ const OpenListBox = styled.div`
   flex: 1 0 0;
 `;
 
-const Line = styled.img`
-  user-select: none;
-  min-height: 12vh;
+const Line = styled.div`
+  width: 4px;
+  background: #e2e2e2;
+  align-self: stretch;
+  border-radius: 999px;
 `;
 
 const RefineBox = styled.div`
