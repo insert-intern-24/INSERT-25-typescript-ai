@@ -422,8 +422,8 @@ export default function CKEditorComponent() {
                 config={editorConfig}
                 onChange={(event, editor) => {
             // 타이머 재시작
-            timerRef.current.stop();
-            timerRef.current.start(3000);
+                  timerRef.current.stop();
+                  timerRef.current.start(3000);
                 }}
               />
             )}
