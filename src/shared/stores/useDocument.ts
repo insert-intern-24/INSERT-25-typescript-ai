@@ -45,7 +45,7 @@ export const useDocument = create<RefineState>((set) => ({
 
     // HTML 문자열을 배열로 변환
     let newDocument = parseHtmlToArray(document);
-    
+  
     // &nbsp;가 포함된 요소는 제거
     newDocument = newDocument.filter(element => !element.includes('&nbsp;'));
     
@@ -82,6 +82,24 @@ export const useDocument = create<RefineState>((set) => ({
     const modifiedElements = uniqueIndices.map(index => newDocument[index as number]);
 
     console.log(modifiedElements);
+    fetch(`${import.meta.env.VITE_AI_API_URL}/ai/refine`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          title: '<p id="e-0">http</p>',
+          content: modifiedElements
+      }),
+      mode: "cors",
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
     state.onProcessing = false;
     return { preDocument: newDocument };
   }),

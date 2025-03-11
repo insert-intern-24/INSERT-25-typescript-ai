@@ -1,3 +1,3 @@
-export default function generateUniqueId() {
-  return 'unique-' + Math.random().toString(36).substr(2, 9);
+export default function generateUniqueId(prefix: string): string {
+  return prefix + Math.random().toString(36).substr(2, 9);
 }

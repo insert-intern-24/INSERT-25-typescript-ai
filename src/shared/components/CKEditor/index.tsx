@@ -124,10 +124,18 @@ export default function CKEditorComponent() {
       // Only select direct children using :scope > *
       parentDiv.querySelectorAll(":scope > *").forEach((el) => {
         if (!el.hasAttribute("data-unique")) {
-          el.setAttribute("data-unique", generateUniqueId());
+          el.setAttribute("data-unique", generateUniqueId("unique-"));
         }
       });
     }
+  };
+
+  function getParent() {
+    const parentDiv = document.querySelector(".ck-editor__editable");
+    if (parentDiv) {
+      return parentDiv.innerHTML;
+    }
+    return null;
   };
   // 타이머 설정 및 정리
   useEffect(() => {
@@ -136,7 +144,7 @@ export default function CKEditorComponent() {
     // 에디터 미사용 액션
     timer.on("done", () => {
       grantDataUnique();
-      const currentVirtualData = editorRef.current?.instance?.getData() || "";
+      const currentVirtualData = getParent() || "";
       updateDocument(currentVirtualData);
     });
 
