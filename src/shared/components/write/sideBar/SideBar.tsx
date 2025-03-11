@@ -34,8 +34,8 @@ export default function SideBar() {
 }
 
 const SideBarBox = styled.div`
-  max-width: 500px;
-  max-height: 1003px;
+  max-width: 20%;
+  max-height: 100%;
   flex-shrink: 0;
   border-left: 1px solid #e2e2e2;
   background: #fff;

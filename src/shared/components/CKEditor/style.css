@@ -28,7 +28,7 @@ body{
 .editor-container__editor-wrapper {
 	display: flex;
 	justify-content: center;
-	width: 100dvw;
+	width: 100%;
 }
 
 .editor-container_document-editor {

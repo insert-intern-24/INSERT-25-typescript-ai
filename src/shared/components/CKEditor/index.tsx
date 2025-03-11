@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import Sidebar from "@/shared/components/write/sideBar/SideBar";
 import {
   DecoupledEditor,
   Alignment,
@@ -389,43 +390,50 @@ export default function CKEditorComponent() {
           <p className="title">{fileData.title}</p>
           <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
         </S.WriteHeader>
-        <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
-        <div className="editor-container__editor-wrapper">
-          <div className="editor-container__editor">
-            <div ref={editorRef}>
-              {editorConfig && (
-                <CKEditor
-                  onReady={(editor) => {
-                    // 에디터 인스턴스 저장
-                    editorRef.current.instance = editor;
-                    const wordCount = editor.plugins.get("WordCount");
-                    editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-                    editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
-                    editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
-                  }}
-                  onAfterDestroy={() => {
-                    Array.from(editorWordCountRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
-                    Array.from(editorToolbarRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
-                    Array.from(editorMenuBarRef.current.children).forEach((child) =>
-                      child.remove()
-                    );
-                  }}
-                  editor={DecoupledEditor}
-                  config={editorConfig}
-                  onChange={(event, editor: DecoupledEditor) => {
-                    // 타이머 재시작
-                    timerRef.current.stop();
-                    timerRef.current.start(3000);
-                  }}
-                />
-              )}
+        <S.WriteSection>
+          <div className="editor-container-section">
+            <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
+            <div className="editor-container__editor-wrapper">
+              <div className="editor-container__editor">
+          <div ref={editorRef}>
+            {isLayoutReady && editorConfig && (
+              <CKEditor
+                onReady={(editor) => {
+            console.log("Editor is ready to use!", editor);
+            // 에디터 인스턴스 저장
+            editorRef.current.instance = editor;
+            const wordCount = editor.plugins.get("WordCount");
+            editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+            editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
+            editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+                }}
+                onAfterDestroy={() => {
+            Array.from(editorWordCountRef.current.children).forEach((child) =>
+              child.remove()
+            );
+            Array.from(editorToolbarRef.current.children).forEach((child) =>
+              child.remove()
+            );
+            Array.from(editorMenuBarRef.current.children).forEach((child) =>
+              child.remove()
+            );
+                }}
+                editor={DecoupledEditor}
+                config={editorConfig}
+                onChange={(event, editor) => {
+            // 타이머 재시작
+            timerRef.current.stop();
+            timerRef.current.start(3000);
+                }}
+              />
+            )}
+            {!isLayoutReady && <div className="editor-loading">Loading editor...</div>}
+          </div>
+              </div>
             </div>
           </div>
-        </div>
+          <Sidebar />
+        </S.WriteSection>
         <div className="editor_container__word-count" ref={editorWordCountRef}></div>
       </div>
     </div>
