@@ -3,11 +3,8 @@ import deepDiff from 'deep-diff';
 import { parseHtmlToArray } from "@/utils/parseHtmlToArray";
 import generateUniqueId from "@/utils/generateUniqueId";
 import replaceSubstring from '@/utils/replaceSubstring';
-import { setEnvironmentData } from 'worker_threads';
 
 interface RefineState {
-  virtualDocument: string;
-  setVirtualDocument: (newDocument: string) => void;
   preDocument: string[];
   initDocument: (newDocument: string) => void;
   updateDocument: (Document: string) => void;
@@ -41,8 +38,6 @@ const allowedHtmlTags = [
 
 
 export const useDocument = create<RefineState>((set) => ({
-  virtualDocument: '',
-  setVirtualDocument: (newDocument: string) => set({ virtualDocument: newDocument }),
   onProcessing: false,
   preDocument: [],
   initDocument: (newDocument : string) => set({ preDocument: parseHtmlToArray(newDocument) }),
@@ -103,7 +98,7 @@ export const useDocument = create<RefineState>((set) => ({
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
-      ErrorToBinding(data, state);
+      ErrorToBinding(data);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -125,13 +120,10 @@ interface ErrorData {
   error: ErrorDetail[];
 };
 
-function ErrorToBinding(data: ErrorData[], state: RefineState) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(state.virtualDocument, "text/html");
-
+function ErrorToBinding(data: ErrorData[]) {
   data.map((errorData) => {
     const target_id = errorData.target_id;
-    const target_element = doc.querySelector(`[data-unique="${target_id}"]`);
+    const target_element = document.querySelector(`[data-unique="${target_id}"]`);
     
     if (!target_element) return null;
     let currentHTML = target_element.innerHTML;
@@ -159,9 +151,7 @@ function ErrorToBinding(data: ErrorData[], state: RefineState) {
         }
       }
     });
-
     target_element.innerHTML = currentHTML;
     return target_element;
   });
-  state.setVirtualDocument(doc.body.innerHTML);
 }

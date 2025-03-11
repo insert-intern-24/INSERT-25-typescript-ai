@@ -99,7 +99,8 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timerRef = useRef(new Timer());
-  const { updateDocument, initDocument, setVirtualDocument, virtualDocument } = useDocument();
+  const { updateDocument, initDocument} =
+    useDocument();
 
   // 파일 데이터 정의
   interface fileDataType {
@@ -108,7 +109,7 @@ export default function CKEditorComponent() {
     hashed_id: string;
     updated_at: string;
   }
-  
+
   // 파일 데이터 상태
   const [fileData, setFileData] = useState<fileDataType>({
     title: "",
@@ -116,10 +117,10 @@ export default function CKEditorComponent() {
     hashed_id: "",
     updated_at: "",
   });
-  
+
   function grantDataUnique() {
     const parentDiv = document.querySelector(".ck-editor__editable");
-    
+
     if (parentDiv) {
       // Only select direct children using :scope > *
       parentDiv.querySelectorAll(":scope > *").forEach((el) => {
@@ -128,7 +129,7 @@ export default function CKEditorComponent() {
         }
       });
     }
-  };
+  }
 
   function getParent() {
     const parentDiv = document.querySelector(".ck-editor__editable");
@@ -136,7 +137,7 @@ export default function CKEditorComponent() {
       return parentDiv.innerHTML;
     }
     return null;
-  };
+  }
   // 타이머 설정 및 정리
   useEffect(() => {
     const timer = timerRef.current;
@@ -144,7 +145,6 @@ export default function CKEditorComponent() {
     // 에디터 미사용 액션
     timer.on("done", () => {
       grantDataUnique();
-      setVirtualDocument(getParent() as string);
       const currentVirtualData = getParent() || "";
       updateDocument(currentVirtualData);
     });
@@ -159,13 +159,16 @@ export default function CKEditorComponent() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/files/${hashed_id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/files/${hashed_id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         const data = await response.json();
 
         // 파일 데이터 설정
@@ -182,19 +185,6 @@ export default function CKEditorComponent() {
     })();
   }, []);
 
-  useEffect(() => {
-    if (editorRef.current?.instance) {
-      const editor = editorRef.current.instance;
-      
-      // 🔥 CKEditor의 innerHTML 직접 수정
-      const editorRoot = editor.editing.view.getDomRoot();
-      if (editorRoot) {
-        editorRoot.innerHTML = virtualDocument;
-        console.log("📌 CKEditor 내부 HTML 강제 변경!");
-      }
-    }
-  }, [virtualDocument]);
-  
   const { editorConfig } = useMemo(() => {
     if (!isLayoutReady) {
       return {};
@@ -342,65 +332,63 @@ export default function CKEditorComponent() {
         {
           model: "heading5",
           view: "h5",
-          title: "Heading 5",
-          class: "ck-heading_heading5",
+              title: "Heading 5",
+              class: "ck-heading_heading5",
+            },
+            {
+              model: "heading6",
+              view: "h6",
+              title: "Heading 6",
+              class: "ck-heading_heading6",
+            },
+          ],
         },
-        {
-          model: "heading6",
-          view: "h6",
-          title: "Heading 6",
-          class: "ck-heading_heading6",
+        htmlSupportConfig: {
+          allow: [
+            {
+              name: "div; span;",
+              classes: true,
+              styles: true,
+              attributes: {
+                id: true,
+                "data-unique": {
+                  required: false,
+                },
+              },
+            },
+          ],
+          disallow: [],
         },
-        ],
-      },
-      htmlSupportConfig : {
-        allow: [
-        {
-          name: 'div',
-          classes: true,
-          styles: true,
-          attributes: {
-            id: true,
-            'data-unique': {
-              required: false
-            }
+        allowedContent: 'span',
+        initialData: `${fileData.content}`,
+        licenseKey: LICENSE_KEY,
+        link: {
+          addTargetToExternalLinks: true,
+          defaultProtocol: "https://",
+          decorators: {
+            toggleDownloadable: {
+              mode: "manual",
+              label: "Downloadable",
+              attributes: {
+                download: "file",
+              },
+            },
           },
-        }
-        ],
-        disallow: []
-      },
-      allowedContent: true, // 🔥 모든 HTML 허용
-      disallowedContent: '', // ❌ 필터링 비활성화
-      initialData: `${fileData.content}`,
-      licenseKey: LICENSE_KEY,
-      link: {
-        addTargetToExternalLinks: true,
-        defaultProtocol: "https://",
-        decorators: {
-        toggleDownloadable: {
-          mode: "manual",
-          label: "Downloadable",
-          attributes: {
-          download: "file",
-          },
         },
+        menuBar: {
+          isVisible: true,
+        },
+        placeholder: "Type or paste your content here!",
+        table: {
+          contentToolbar: [
+            "tableColumn",
+            "tableRow",
+            "mergeTableCells",
+            "tableProperties",
+            "tableCellProperties",
+          ],
         },
       },
-      menuBar: {
-        isVisible: true,
-      },
-      placeholder: "Type or paste your content here!",
-      table: {
-        contentToolbar: [
-        "tableColumn",
-        "tableRow",
-        "mergeTableCells",
-        "tableProperties",
-        "tableCellProperties",
-        ],
-      },
-      },
-
     };
   }, [isLayoutReady]);
 
@@ -412,53 +400,71 @@ export default function CKEditorComponent() {
       >
         <S.WriteHeader>
           <p className="title">{fileData.title}</p>
-          <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
+          <div
+            className="editor-container__menu-bar"
+            ref={editorMenuBarRef}
+          ></div>
         </S.WriteHeader>
         <S.WriteSection>
           <div className="editor-container-section">
-            <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
+            <div
+              className="editor-container__toolbar"
+              ref={editorToolbarRef}
+            ></div>
             <div className="editor-container__editor-wrapper">
               <div className="editor-container__editor">
-          <div ref={editorRef}>
-            {isLayoutReady && editorConfig && (
-              <CKEditor
-                onReady={(editor) => {
-                console.log("Editor is ready to use!", editor);
-                // 에디터 인스턴스 저장
-                editorRef.current.instance = editor;
-                const wordCount = editor.plugins.get("WordCount");
-                editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-                editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
-                editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
-                }}
-                onAfterDestroy={() => {
-            Array.from(editorWordCountRef.current.children).forEach((child) =>
-              child.remove()
-            );
-            Array.from(editorToolbarRef.current.children).forEach((child) =>
-              child.remove()
-            );
-            Array.from(editorMenuBarRef.current.children).forEach((child) =>
-              child.remove()
-            );
-                }}
-                editor={DecoupledEditor}
-                config={editorConfig}
-                onChange={(event, editor) => {
-            // 타이머 재시작
-                  timerRef.current.stop();
-                  timerRef.current.start(3000);
-                }}
-              />
-            )}
-            {!isLayoutReady && <div className="editor-loading">Loading editor...</div>}
-          </div>
+                <div ref={editorRef}>
+                  {isLayoutReady && editorConfig && (
+                    <CKEditor
+                      onReady={(editor) => {
+                        console.log("Editor is ready to use!", editor);
+                        // 에디터 인스턴스 저장
+                        editorRef.current.instance = editor;
+                        const wordCount = editor.plugins.get("WordCount");
+                        editorWordCountRef.current.appendChild(
+                          wordCount.wordCountContainer
+                        );
+                        editorToolbarRef.current.appendChild(
+                          editor.ui.view.toolbar.element
+                        );
+                        editorMenuBarRef.current.appendChild(
+                          editor.ui.view.menuBarView.element
+                        );
+                      }}
+                      onAfterDestroy={() => {
+                        Array.from(editorWordCountRef.current.children).forEach(
+                          (child) => child.remove()
+                        );
+                        Array.from(editorToolbarRef.current.children).forEach(
+                          (child) => child.remove()
+                        );
+                        Array.from(editorMenuBarRef.current.children).forEach(
+                          (child) => child.remove()
+                        );
+                      }}
+                      editor={DecoupledEditor}
+                      config={editorConfig}
+                      onChange={(event, editor) => {
+                        // 타이머 재시작
+                        const data = editor.getData();
+                        timerRef.current.stop();
+                        timerRef.current.start(3000);
+                      }}
+                    />
+                  )}
+                  {!isLayoutReady && (
+                    <div className="editor-loading">Loading editor...</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
           <Sidebar />
         </S.WriteSection>
-        <div className="editor_container__word-count" ref={editorWordCountRef}></div>
+        <div
+          className="editor_container__word-count"
+          ref={editorWordCountRef}
+        ></div>
       </div>
     </div>
   );
