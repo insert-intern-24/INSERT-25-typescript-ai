@@ -1,8 +1,13 @@
 import { create } from 'zustand';
 import deepDiff from 'deep-diff';
 import { parseHtmlToArray } from "@/utils/parseHtmlToArray";
+import generateUniqueId from "@/utils/generateUniqueId";
+import replaceSubstring from '@/utils/replaceSubstring';
+import { setEnvironmentData } from 'worker_threads';
 
 interface RefineState {
+  virtualDocument: string;
+  setVirtualDocument: (newDocument: string) => void;
   preDocument: string[];
   initDocument: (newDocument: string) => void;
   updateDocument: (Document: string) => void;
@@ -36,6 +41,8 @@ const allowedHtmlTags = [
 
 
 export const useDocument = create<RefineState>((set) => ({
+  virtualDocument: '',
+  setVirtualDocument: (newDocument: string) => set({ virtualDocument: newDocument }),
   onProcessing: false,
   preDocument: [],
   initDocument: (newDocument : string) => set({ preDocument: parseHtmlToArray(newDocument) }),
@@ -96,6 +103,7 @@ export const useDocument = create<RefineState>((set) => ({
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
+      ErrorToBinding(data, state);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -104,3 +112,56 @@ export const useDocument = create<RefineState>((set) => ({
     return { preDocument: newDocument };
   }),
 }));
+
+interface ErrorDetail {
+  code: number;
+  origin_word: string;
+  refine_word: string[];
+  index: number;
+};
+
+interface ErrorData {
+  target_id: string;
+  error: ErrorDetail[];
+};
+
+function ErrorToBinding(data: ErrorData[], state: RefineState) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(state.virtualDocument, "text/html");
+
+  data.map((errorData) => {
+    const target_id = errorData.target_id;
+    const target_element = doc.querySelector(`[data-unique="${target_id}"]`);
+    
+    if (!target_element) return null;
+    let currentHTML = target_element.innerHTML;
+    
+    const errorIndices = errorData.error
+      .map(errorDetail => errorDetail.index)
+      .sort((a, b) => a - b);
+
+    let additionalIndex = 0;
+    errorIndices.forEach((index) => {
+      const errorDetail = errorData.error.find(detail => detail.index === index);
+      if (errorDetail) {
+        const { origin_word } = errorDetail;
+        if (currentHTML.slice(index + additionalIndex, index + additionalIndex + origin_word.length) === origin_word) {
+          const random_id = generateUniqueId('error-');
+          const define_span = `<span id="${random_id}" class="__origin_word__">${origin_word}</span>`;
+          currentHTML = replaceSubstring(
+            currentHTML, 
+            index + additionalIndex, 
+            index + additionalIndex + origin_word.length, 
+            define_span
+          );
+          additionalIndex += define_span.length - origin_word.length;
+          console.log(currentHTML);
+        }
+      }
+    });
+
+    target_element.innerHTML = currentHTML;
+    return target_element;
+  });
+  state.setVirtualDocument(doc.body.innerHTML);
+}

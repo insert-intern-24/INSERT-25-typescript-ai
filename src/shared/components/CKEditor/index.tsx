@@ -99,7 +99,7 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timerRef = useRef(new Timer());
-  const { updateDocument, initDocument } = useDocument();
+  const { updateDocument, initDocument, setVirtualDocument, virtualDocument } = useDocument();
 
   // 파일 데이터 정의
   interface fileDataType {
@@ -144,6 +144,7 @@ export default function CKEditorComponent() {
     // 에디터 미사용 액션
     timer.on("done", () => {
       grantDataUnique();
+      setVirtualDocument(getParent() as string);
       const currentVirtualData = getParent() || "";
       updateDocument(currentVirtualData);
     });
@@ -181,6 +182,19 @@ export default function CKEditorComponent() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (editorRef.current?.instance) {
+      const editor = editorRef.current.instance;
+      
+      // 🔥 CKEditor의 innerHTML 직접 수정
+      const editorRoot = editor.editing.view.getDomRoot();
+      if (editorRoot) {
+        editorRoot.innerHTML = virtualDocument;
+        console.log("📌 CKEditor 내부 HTML 강제 변경!");
+      }
+    }
+  }, [virtualDocument]);
+  
   const { editorConfig } = useMemo(() => {
     if (!isLayoutReady) {
       return {};
@@ -355,6 +369,8 @@ export default function CKEditorComponent() {
         ],
         disallow: []
       },
+      allowedContent: true, // 🔥 모든 HTML 허용
+      disallowedContent: '', // ❌ 필터링 비활성화
       initialData: `${fileData.content}`,
       licenseKey: LICENSE_KEY,
       link: {
