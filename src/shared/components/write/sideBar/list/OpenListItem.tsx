@@ -32,8 +32,8 @@ export default function OpenListItem({
             <DeleteText>{def}</DeleteText>
             <RefinedText>
               {refine}
-              <RefineTest>할 수 있어</RefineTest>
             </RefinedText>
+              <RefineTest>할 수 있어</RefineTest>
           </RefineBox>
           <Buttons>
             <RefineButton>
@@ -95,7 +95,7 @@ const RefineTest = styled.span`
   line-height: normal;
 `;
 const DeleteText = styled(RefineTest)`
-  color: #afb1c3;
+  color: #afb1c3; 
   text-decoration: line-through;
 `;
 
@@ -119,6 +119,7 @@ const RefineButton = styled.button`
   border-radius: 4px;
   background: #05a569;
   border: none;
+  cursor: pointer;
 `;
 
 const RefineButtonText = styled.span`
