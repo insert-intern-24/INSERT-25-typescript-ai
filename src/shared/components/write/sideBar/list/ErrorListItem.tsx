@@ -22,7 +22,7 @@ export default function ListItem({ default: def, description }: ListItemProps) {
 
 export const ListItemBox = styled.div`
   width: 100%;
-  padding: 10px 6px;
+  padding: 10px 10px;
   background: #fff;
 `;
 
