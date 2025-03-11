@@ -14,6 +14,6 @@ export const WriteSection = styled.section`
   display: flex;
 
   .editor-container-section {
-    width: 80%;
+    width: 70dvw;
   }
 `;

@@ -28,6 +28,7 @@ export const ListItemBox = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   border-bottom: 1px solid #e2e2e2;
+  border-top: 1px solid #e2e2e2;
   background: #fff;
 `;
 
