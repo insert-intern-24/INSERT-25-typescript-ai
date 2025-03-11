@@ -4,7 +4,7 @@ import { parseHtmlToArray } from "@/utils/parseHtmlToArray";
 
 interface RefineState {
   preDocument: string[];
-  initDocument: (newDocument: string[]) => void;
+  initDocument: (newDocument: string) => void;
   updateDocument: (Document: string) => void;
   onProcessing : boolean;
 }
@@ -38,7 +38,7 @@ const allowedHtmlTags = [
 export const useDocument = create<RefineState>((set) => ({
   onProcessing: false,
   preDocument: [],
-  initDocument: (newDocument : string[]) => set({ preDocument: newDocument }),
+  initDocument: (newDocument : string) => set({ preDocument: parseHtmlToArray(newDocument) }),
   updateDocument: (document: string) => set((state) => {
     if (state.onProcessing) return state;
     state.onProcessing = true;

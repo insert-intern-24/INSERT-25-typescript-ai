@@ -399,13 +399,13 @@ export default function CKEditorComponent() {
             {isLayoutReady && editorConfig && (
               <CKEditor
                 onReady={(editor) => {
-            console.log("Editor is ready to use!", editor);
-            // 에디터 인스턴스 저장
-            editorRef.current.instance = editor;
-            const wordCount = editor.plugins.get("WordCount");
-            editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-            editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
-            editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+                console.log("Editor is ready to use!", editor);
+                // 에디터 인스턴스 저장
+                editorRef.current.instance = editor;
+                const wordCount = editor.plugins.get("WordCount");
+                editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+                editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
+                editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
                 }}
                 onAfterDestroy={() => {
             Array.from(editorWordCountRef.current.children).forEach((child) =>
