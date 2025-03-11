@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import deepDiff from 'deep-diff';
 import { parseHtmlToArray } from "@/utils/parseHtmlToArray";
-import { on } from 'events';
 
 interface RefineState {
   preDocument: string[];
@@ -9,6 +8,32 @@ interface RefineState {
   updateDocument: (Document: string) => void;
   onProcessing : boolean;
 }
+
+const allowedHtmlTags = [
+  // 기본 텍스트 태그
+  "p", "span", "br", "hr",
+
+  // 제목 태그
+  "h1", "h2", "h3", "h4", "h5", "h6",
+
+  // 강조 및 스타일 태그
+  "b", "strong", "i", "em", "u", "mark", "small", 
+  "del", "ins", "sub", "sup",
+
+  // 인용 및 코드 관련 태그
+  "blockquote", "q", "cite", "code", "pre", 
+  "kbd", "samp", "var",
+
+  // 목록 관련 태그
+  "li", "dt", "dd",
+
+  // 테이블 관련 태그
+  "th", "td", "caption",
+
+  // 폼 요소 (입력 가능)
+  "textarea", "input", "button"
+];
+
 
 export const useDocument = create<RefineState>((set) => ({
   onProcessing: false,
@@ -19,13 +44,25 @@ export const useDocument = create<RefineState>((set) => ({
     state.onProcessing = true;
 
     // HTML 문자열을 배열로 변환
-    const newDocument = parseHtmlToArray(document);
-
+    let newDocument = parseHtmlToArray(document);
+    
+    // &nbsp;가 포함된 요소는 제거
+    newDocument = newDocument.filter(element => !element.includes('&nbsp;'));
+    
+    // allowedHtmlTags에 포함되는 태그만 필터링
+    newDocument = newDocument.filter(element => {
+      const tag = element.replace(/<(\w+)[^>]*>.*<\/\1>|<(\w+)[^>]*\/>/g, "$1$2").trim();
+      return allowedHtmlTags.includes(tag);
+    });
     // 이전 문서와 새로운 문서를 비교하여 변경된 요소를 찾음
     const differences = deepDiff.diff(state.preDocument, newDocument);
 
+
     // 변경된 요소가 없으면 상태를 그대로 반환
-    if (differences === undefined) return state;
+    if (differences === undefined) {
+      state.onProcessing = false;
+      return state;
+    }
     
     // 변경된 요소의 인덱스를 찾음
     const modifiedOrAddedIndices = differences.map(diff => {
