@@ -34,7 +34,6 @@ const RefinedItemBox = styled.div`
   padding: 10px 6px 10px 10px;
   align-items: flex-start;
   gap: 10px;
-  border-bottom: 1px solid #e2e2e2;
   background: #fff;
 `;
 

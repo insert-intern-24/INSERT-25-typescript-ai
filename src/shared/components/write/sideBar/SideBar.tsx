@@ -26,12 +26,15 @@ export default function SideBar() {
             default={word[1].default}
             description={word[1].description}
           />
+          <Spacer />
           <OpenListItem
             default={word[0].default}
             refine={word[0].refine}
             description={word[0].description}
           />
+          <Spacer />
           <RefinedItem default={word[1].default} refine={word[1].refine} />
+          <Spacer />
         </SideBarMain>
       </SideBarBox>
     </>
@@ -48,4 +51,9 @@ const SideBarBox = styled.div`
 
 const SideBarMain = styled.main`
   border-top: 1px solid #e2e2e2;
+`;
+
+const Spacer = styled.hr`
+  border: 1px solid #e2e2e2;
+  margin: 0px;
 `;

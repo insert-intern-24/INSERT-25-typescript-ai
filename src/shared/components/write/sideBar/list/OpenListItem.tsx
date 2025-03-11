@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import line from "/public/images/icon/line.svg";
 import loanword from "/public/images/icon/loanword.svg";
 import * as All from "./ErrorListItem";
 
@@ -17,19 +16,17 @@ export default function OpenListItem({
   return (
     <>
       <OpenListItemBox>
-        <Line src={line} alt="line" />
+        <VerticalLine />
         <OpenListBox>
-          <All.ListItemBox>
-            <All.ListContentBox>
-              <All.Loanword src={loanword} alt="loanword" />
-              <All.ContextBox>
-                <All.Description>{description}</All.Description>
-                <All.Text>
-                  {def} → <RefinedText>{refine}</RefinedText>
-                </All.Text>
-              </All.ContextBox>
-            </All.ListContentBox>
-          </All.ListItemBox>
+          <All.ListContentBox>
+            <All.Loanword src={loanword} alt="loanword" />
+            <All.ContextBox>
+              <All.Description>{description}</All.Description>
+              <All.Text>
+                {def} → <RefinedText>{refine}</RefinedText>
+              </All.Text>
+            </All.ContextBox>
+          </All.ListContentBox>
           <RefineBox>
             <RefineTest>나는 이 일을</RefineTest>
             <DeleteText>{def}</DeleteText>
@@ -52,6 +49,14 @@ export default function OpenListItem({
   );
 }
 
+const VerticalLine = styled.div`
+  width: 4px;
+  background-color: #E2E2E2;
+  place-self: stretch;
+  border-radius: 2px;
+  margin: 0;
+`;
+
 const OpenListItemBox = styled.div`
   display: flex;
   width: 100%;
@@ -71,17 +76,12 @@ const OpenListBox = styled.div`
   flex: 1 0 0;
 `;
 
-const Line = styled.img`
-  user-select: none;
-  min-height: 12vh;
-`;
-
 const RefineBox = styled.div`
   display: flex;
   padding: 4px 8px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   border-radius: 4px;
   background: #f8fbfc;
 `;
