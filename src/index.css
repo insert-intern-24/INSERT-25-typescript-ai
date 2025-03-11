@@ -7,3 +7,8 @@ body {
   min-height: 100vh;
   font-family: "Noto Sans KR", "Pretendard", sans-serif;
 }
+
+.__origin_word__ {
+  background: rgba(255, 94, 94, 0.24);
+  border-bottom: 2px solid #FF5E5E;
+}
