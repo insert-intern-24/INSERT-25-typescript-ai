@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Sidebar from "@/shared/components/write/sideBar/SideBar";
+import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
 import {
   DecoupledEditor,
   Alignment,
@@ -77,6 +78,7 @@ import {
   TodoList,
   Underline,
   WordCount,
+  Plugin,
 } from "ckeditor5";
 
 import "ckeditor5/ckeditor5.css";
@@ -89,6 +91,66 @@ import Timer from "tiny-timer";
 
 // const LICENSE_KEY = import.meta.env.VITE_CKEDITOR_LICENSE_KEY;
 const LICENSE_KEY = "GPL";
+
+const IDAttribute = "idUnique";
+const DataAttribute = "data-unique";
+class CustomAttributeplugin extends Plugin {
+  init() {
+    this._defineSchema();
+    this._defineConverters();
+  }
+  _defineSchema() {
+    const schema = this.editor.model.schema;
+    // 1. 모델 스키마에 customAttribute 허용
+    ["$text", "$block", "$root", "$container"].forEach((element) => {
+      schema.extend(element, {
+        allowAttributes: [IDAttribute, "data-unique"],
+      });
+    });
+  }
+  _defineConverters() {
+    const conversion = this.editor.conversion;
+    // to View
+    conversion.for("downcast").attributeToElement({
+      model: IDAttribute,
+      view: (modelAttributeValue, { writer }) => {
+        console.log("ModelAttributeValue", modelAttributeValue);
+        return writer.createAttributeElement("span", {
+          id: modelAttributeValue,
+          class: "__origin_word__",
+        });
+      },
+    });
+    // to Model
+    conversion.for("upcast").elementToAttribute({
+      view: {
+        name: "span",
+        attributes: {
+          id: true,
+        },
+      },
+      model: {
+        key: IDAttribute,
+        value: (viewElement) => {
+          console.log("ViewElement", viewElement);
+          console.log("ViewElement2", viewElement.getAttribute("id"));
+          return viewElement.getAttribute("id");
+        },
+      },
+    });
+
+    // to View
+    conversion.for("downcast").attributeToAttribute({
+      model: DataAttribute,
+      view: "data-unique",
+    });
+    // to Model
+    conversion.for("upcast").attributeToAttribute({
+      view: "data-unique",
+      model: DataAttribute,
+    });
+  }
+}
 
 export default function CKEditorComponent() {
   const editorContainerRef = useRef(null);
@@ -212,6 +274,7 @@ export default function CKEditorComponent() {
           shouldNotGroupWhenFull: false,
         },
         plugins: [
+          // ExtendHTMLSupport,
           Alignment,
           Autoformat,
           AutoImage,
@@ -285,6 +348,7 @@ export default function CKEditorComponent() {
           TodoList,
           Underline,
           WordCount,
+          CustomAttributeplugin,
         ],
         balloonToolbar: ["bold", "italic", "|", "link"],
         fontFamily: {
@@ -342,15 +406,30 @@ export default function CKEditorComponent() {
         htmlSupportConfig: {
           allow: [
             {
-              name: /^.*$/,
-              styles: true,
-              attributes: true,
+              name: /.*/,
               classes: true,
+              styles: true,
+              attributes: {
+                id: true,
+                "data-unique": true,
+              },
             },
+            // {
+            //   name: "span",
+            //   classes: {
+            //     "__origin_word__": true
+            //   },
+            //   styles: true,
+            //   attributes: {
+            //     id: true,
+            //     "data-unique": {
+            //       required: false,
+            //     },
+            //   },
+            // },
           ],
           disallow: [],
         },
-        allowedContent: "span",
         initialData: `${fileData.content}`,
         licenseKey: LICENSE_KEY,
         link: {
@@ -391,7 +470,15 @@ export default function CKEditorComponent() {
       >
         <S.WriteHeader>
           <p className="title">{fileData.title}</p>
-          <button onClick={() => editorRef.current?.setData(`<p data-placeholder="Type or paste your content here!" class="ck-placeholder" data-unique="unique-fm2basrqd">오늘날 <span id="error-wip7wyk2x" class="__origin_word__" style="background:blue;">딥페이크</span> 범죄가 증가하는 추세이다.</p>`)}>asdf</button>
+          <button
+            onClick={() => {
+              const a = `<p data-placeholder="Type or paste your content here!" class="ck-placeholder" data-unique="unique-fm2basrqd" style="color:blue">오늘날 <span id="error-wip7wyk2x" class="__origin_word__">딥페이크</span> 범죄가 증가하는 추세이다.</p>`;
+              // console.log(editorRef.current.data.htmlProcessor.domConverter.)
+              editorRef.current.setData(a);
+            }}
+          >
+            asdf
+          </button>
           <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
         </S.WriteHeader>
         <S.WriteSection>
@@ -410,6 +497,8 @@ export default function CKEditorComponent() {
                         editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
                         editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
                         editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
+
+                        CKEditorInspector.attach(editor);
                       }}
                       onAfterDestroy={() => {
                         Array.from(editorWordCountRef.current.children).forEach((child) =>

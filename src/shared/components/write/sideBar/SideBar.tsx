@@ -3,38 +3,37 @@ import TabsBlock from "./tabs/TabsBlock";
 import ListItem from "./list/ErrorListItem";
 import OpenListItem from "./list/OpenListItem";
 import RefinedItem from "./list/RefinedItem";
+import { useDocument } from "@/shared/stores/useDocument";
 
-const word = [
-  {
-    default: "핸들링",
-    refine: "처리",
-    description: "외래어 직역 표현",
-  },
-  {
-    default: "노잼",
-    refine: "재미가 없는, 흥미가 퇴색된",
-    description: "불필요한 줄임말 외래어 사용",
-  },
-];
+const error_description = ["", "불필요한 외래어 사용"];
 export default function SideBar() {
+  const { errors, setChoiceError, choiceError } = useDocument();
+
   return (
     <>
       <SideBarBox>
         <TabsBlock />
         <SideBarMain>
-          <ListItem
-            default={word[1].default}
-            description={word[1].description}
-          />
-          <Spacer />
-          <OpenListItem
-            default={word[0].default}
-            refine={word[0].refine}
-            description={word[0].description}
-          />
-          <Spacer />
-          <RefinedItem default={word[1].default} refine={word[1].refine} />
-          <Spacer />
+          {errors?.map((error) => (
+            <>
+              {error.error_id === choiceError ? (
+                <OpenListItem
+                  key={error.error_id}
+                  default={error.error[0].origin_word}
+                  refine={error.error[0].refine_word[0]}
+                  description={error_description[error.error[0].code]}
+                  onClick={() => setChoiceError("")}/>
+              ) : (
+                <ListItem
+                  key={error.error_id}
+                  default={error.error[0].origin_word}
+                  description={error_description[error.error[0].code]}
+                  onClick={() => setChoiceError(error.error_id)}
+                />
+              )}
+              <Spacer />
+            </>
+          ))}
         </SideBarMain>
       </SideBarBox>
     </>

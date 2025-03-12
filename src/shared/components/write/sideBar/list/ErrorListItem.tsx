@@ -4,11 +4,12 @@ import styled from "styled-components";
 interface ListItemProps {
   default: string;
   description: string;
+  onClick?: () => void;
 }
 
-export default function ListItem({ default: def, description }: ListItemProps) {
+export default function ListItem({ default: def, description, onClick }: ListItemProps) {
   return (
-    <ListItemBox >
+    <ListItemBox onClick={onClick}>
       <ListContentBox>
         <Loanword src={loanword} alt="loanword" />
         <ContextBox>

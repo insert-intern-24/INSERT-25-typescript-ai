@@ -6,16 +6,18 @@ interface OpenListItemProps {
   default: string;
   refine: string;
   description: string;
+  onClick?: () => void;
 }
 
 export default function OpenListItem({
   default: def,
   refine,
   description,
+  onClick,
 }: OpenListItemProps) {
   return (
     <>
-      <OpenListItemBox>
+      <OpenListItemBox onClick={onClick}>
         <VerticalLine />
         <OpenListBox>
           <All.ListContentBox>
