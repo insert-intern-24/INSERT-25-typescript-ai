@@ -7,7 +7,7 @@ import replaceSubstring from '@/utils/replaceSubstring';
 interface RefineState {
   preDocument: string[];
   initDocument: (newDocument: string) => void;
-  updateDocument: (Document: string) => void;
+  updateDocument: (documentContext: string, editorRef) => void;
   onProcessing : boolean;
 }
 
@@ -41,12 +41,12 @@ export const useDocument = create<RefineState>((set) => ({
   onProcessing: false,
   preDocument: [],
   initDocument: (newDocument : string) => set({ preDocument: parseHtmlToArray(newDocument) }),
-  updateDocument: (document: string) => set((state) => {
+  updateDocument: (documentContext: string, editorRef) => set((state) => {
     if (state.onProcessing) return state;
     state.onProcessing = true;
 
     // HTML 문자열을 배열로 변환
-    let newDocument = parseHtmlToArray(document);
+    let newDocument = parseHtmlToArray(documentContext);
   
     // &nbsp;가 포함된 요소는 제거
     newDocument = newDocument.filter(element => !element.includes('&nbsp;'));
@@ -84,26 +84,31 @@ export const useDocument = create<RefineState>((set) => ({
     const modifiedElements = uniqueIndices.map(index => newDocument[index as number]);
 
     console.log(modifiedElements);
-    fetch(`${import.meta.env.VITE_AI_API_URL}/ai/refine`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          title: '<p id="e-0">http</p>',
-          content: modifiedElements
-      }),
-      mode: "cors",
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      ErrorToBinding(data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-    state.onProcessing = false;
+    // fetch(`${import.meta.env.VITE_AI_API_URL}/ai/refine`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //       title: '<p id="e-0">http</p>',
+    //       content: modifiedElements
+    //   }),
+    //   mode: "cors",
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //   console.log(editorRef.current.getData());
+    //   console.log('Success:', data);
+    //   return ErrorToBinding(data);
+    // }).then((data)=>{
+    //   console.log(editorRef);
+    //   // editorRef.current.setData(data.querySelector('.ck-content')?.innerHTML as string);
+    //   editorRef.current.setData(`<p data-placeholder="Type or paste your content here!" class="ck-placeholder" data-unique="unique-fm2basrqd">오늘날 <span id="error-wip7wyk2x" class="__origin_word__">딥페이크</span> 범죄가 증가하는 추세이다.</p>`);
+    //   state.onProcessing = false;
+    // })
+    // .catch((error) => {
+    //   console.error('Error:', error);
+    // });
     return { preDocument: newDocument };
   }),
 }));
@@ -120,10 +125,11 @@ interface ErrorData {
   error: ErrorDetail[];
 };
 
-function ErrorToBinding(data: ErrorData[]) {
-  data.map((errorData) => {
+async function ErrorToBinding(data: ErrorData[]) {
+  const document2 = document.cloneNode(true) as Document;
+  await data.map((errorData) => {
     const target_id = errorData.target_id;
-    const target_element = document.querySelector(`[data-unique="${target_id}"]`);
+    const target_element = document2.querySelector(`[data-unique="${target_id}"]`);
     
     if (!target_element) return null;
     let currentHTML = target_element.innerHTML;
@@ -154,4 +160,5 @@ function ErrorToBinding(data: ErrorData[]) {
     target_element.innerHTML = currentHTML;
     return target_element;
   });
+  return document2;
 }

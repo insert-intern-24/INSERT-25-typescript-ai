@@ -99,8 +99,7 @@ export default function CKEditorComponent() {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
   const timerRef = useRef(new Timer());
-  const { updateDocument, initDocument} =
-    useDocument();
+  const { updateDocument, initDocument } = useDocument();
 
   // 파일 데이터 정의
   interface fileDataType {
@@ -146,7 +145,7 @@ export default function CKEditorComponent() {
     timer.on("done", () => {
       grantDataUnique();
       const currentVirtualData = getParent() || "";
-      updateDocument(currentVirtualData);
+      updateDocument(currentVirtualData, editorRef);
     });
 
     // 컴포넌트 언마운트 시 타이머 정리
@@ -159,16 +158,13 @@ export default function CKEditorComponent() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/files/${hashed_id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/files/${hashed_id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         const data = await response.json();
 
         // 파일 데이터 설정
@@ -192,146 +188,146 @@ export default function CKEditorComponent() {
 
     return {
       editorConfig: {
-      toolbar: {
-        items: [
-        "heading",
-        "|",
-        "fontSize",
-        "fontFamily",
-        "fontColor",
-        "fontBackgroundColor",
-        "|",
-        "bold",
-        "italic",
-        "underline",
-        "|",
-        "link",
-        "insertTable",
-        "|",
-        "alignment",
-        "|",
-        "outdent",
-        "indent",
+        toolbar: {
+          items: [
+            "heading",
+            "|",
+            "fontSize",
+            "fontFamily",
+            "fontColor",
+            "fontBackgroundColor",
+            "|",
+            "bold",
+            "italic",
+            "underline",
+            "|",
+            "link",
+            "insertTable",
+            "|",
+            "alignment",
+            "|",
+            "outdent",
+            "indent",
+          ],
+          shouldNotGroupWhenFull: false,
+        },
+        plugins: [
+          Alignment,
+          Autoformat,
+          AutoImage,
+          AutoLink,
+          Autosave,
+          Base64UploadAdapter,
+          BlockQuote,
+          Bold,
+          Bookmark,
+          Code,
+          CodeBlock,
+          BalloonToolbar,
+          Essentials,
+          FindAndReplace,
+          FontBackgroundColor,
+          FontColor,
+          FontFamily,
+          FontSize,
+          FullPage,
+          GeneralHtmlSupport,
+          Heading,
+          Highlight,
+          HorizontalLine,
+          HtmlComment,
+          HtmlEmbed,
+          ImageBlock,
+          ImageCaption,
+          ImageInline,
+          ImageInsert,
+          ImageInsertViaUrl,
+          ImageResize,
+          ImageStyle,
+          ImageTextAlternative,
+          ImageToolbar,
+          ImageUpload,
+          Indent,
+          IndentBlock,
+          Italic,
+          Link,
+          LinkImage,
+          List,
+          ListProperties,
+          MediaEmbed,
+          Mention,
+          PageBreak,
+          Paragraph,
+          PasteFromMarkdownExperimental,
+          PasteFromOffice,
+          RemoveFormat,
+          ShowBlocks,
+          SourceEditing,
+          SpecialCharacters,
+          SpecialCharactersArrows,
+          SpecialCharactersCurrency,
+          SpecialCharactersEssentials,
+          SpecialCharactersLatin,
+          SpecialCharactersMathematical,
+          SpecialCharactersText,
+          Strikethrough,
+          Style,
+          Subscript,
+          Superscript,
+          Table,
+          TableCaption,
+          TableCellProperties,
+          TableColumnResize,
+          TableProperties,
+          TableToolbar,
+          TextPartLanguage,
+          TextTransformation,
+          TodoList,
+          Underline,
+          WordCount,
         ],
-        shouldNotGroupWhenFull: false,
-      },
-      plugins: [
-        Alignment,
-        Autoformat,
-        AutoImage,
-        AutoLink,
-        Autosave,
-        Base64UploadAdapter,
-        BlockQuote,
-        Bold,
-        Bookmark,
-        Code,
-        CodeBlock,
-        BalloonToolbar,
-        Essentials,
-        FindAndReplace,
-        FontBackgroundColor,
-        FontColor,
-        FontFamily,
-        FontSize,
-        FullPage,
-        GeneralHtmlSupport,
-        Heading,
-        Highlight,
-        HorizontalLine,
-        HtmlComment,
-        HtmlEmbed,
-        ImageBlock,
-        ImageCaption,
-        ImageInline,
-        ImageInsert,
-        ImageInsertViaUrl,
-        ImageResize,
-        ImageStyle,
-        ImageTextAlternative,
-        ImageToolbar,
-        ImageUpload,
-        Indent,
-        IndentBlock,
-        Italic,
-        Link,
-        LinkImage,
-        List,
-        ListProperties,
-        MediaEmbed,
-        Mention,
-        PageBreak,
-        Paragraph,
-        PasteFromMarkdownExperimental,
-        PasteFromOffice,
-        RemoveFormat,
-        ShowBlocks,
-        SourceEditing,
-        SpecialCharacters,
-        SpecialCharactersArrows,
-        SpecialCharactersCurrency,
-        SpecialCharactersEssentials,
-        SpecialCharactersLatin,
-        SpecialCharactersMathematical,
-        SpecialCharactersText,
-        Strikethrough,
-        Style,
-        Subscript,
-        Superscript,
-        Table,
-        TableCaption,
-        TableCellProperties,
-        TableColumnResize,
-        TableProperties,
-        TableToolbar,
-        TextPartLanguage,
-        TextTransformation,
-        TodoList,
-        Underline,
-        WordCount,
-      ],
-      balloonToolbar: ["bold", "italic", "|", "link"],
-      fontFamily: {
-        supportAllValues: true,
-      },
-      fontSize: {
-        options: [10, 12, 14, "default", 18, 20, 22],
-        supportAllValues: true,
-      },
-      heading: {
-        options: [
-        {
-          model: "paragraph",
-          title: "Paragraph",
-          class: "ck-heading_paragraph",
+        balloonToolbar: ["bold", "italic", "|", "link"],
+        fontFamily: {
+          supportAllValues: true,
         },
-        {
-          model: "heading1",
-          view: "h1",
-          title: "Heading 1",
-          class: "ck-heading_heading1",
+        fontSize: {
+          options: [10, 12, 14, "default", 18, 20, 22],
+          supportAllValues: true,
         },
-        {
-          model: "heading2",
-          view: "h2",
-          title: "Heading 2",
-          class: "ck-heading_heading2",
-        },
-        {
-          model: "heading3",
-          view: "h3",
-          title: "Heading 3",
-          class: "ck-heading_heading3",
-        },
-        {
-          model: "heading4",
-          view: "h4",
-          title: "Heading 4",
-          class: "ck-heading_heading4",
-        },
-        {
-          model: "heading5",
-          view: "h5",
+        heading: {
+          options: [
+            {
+              model: "paragraph",
+              title: "Paragraph",
+              class: "ck-heading_paragraph",
+            },
+            {
+              model: "heading1",
+              view: "h1",
+              title: "Heading 1",
+              class: "ck-heading_heading1",
+            },
+            {
+              model: "heading2",
+              view: "h2",
+              title: "Heading 2",
+              class: "ck-heading_heading2",
+            },
+            {
+              model: "heading3",
+              view: "h3",
+              title: "Heading 3",
+              class: "ck-heading_heading3",
+            },
+            {
+              model: "heading4",
+              view: "h4",
+              title: "Heading 4",
+              class: "ck-heading_heading4",
+            },
+            {
+              model: "heading5",
+              view: "h5",
               title: "Heading 5",
               class: "ck-heading_heading5",
             },
@@ -346,20 +342,15 @@ export default function CKEditorComponent() {
         htmlSupportConfig: {
           allow: [
             {
-              name: "div; span;",
-              classes: true,
+              name: /^.*$/,
               styles: true,
-              attributes: {
-                id: true,
-                "data-unique": {
-                  required: false,
-                },
-              },
+              attributes: true,
+              classes: true,
             },
           ],
           disallow: [],
         },
-        allowedContent: 'span',
+        allowedContent: "span",
         initialData: `${fileData.content}`,
         licenseKey: LICENSE_KEY,
         link: {
@@ -400,46 +391,35 @@ export default function CKEditorComponent() {
       >
         <S.WriteHeader>
           <p className="title">{fileData.title}</p>
-          <div
-            className="editor-container__menu-bar"
-            ref={editorMenuBarRef}
-          ></div>
+          <button onClick={() => editorRef.current?.setData(`<p data-placeholder="Type or paste your content here!" class="ck-placeholder" data-unique="unique-fm2basrqd">오늘날 <span id="error-wip7wyk2x" class="__origin_word__" style="background:blue;">딥페이크</span> 범죄가 증가하는 추세이다.</p>`)}>asdf</button>
+          <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
         </S.WriteHeader>
         <S.WriteSection>
           <div className="editor-container-section">
-            <div
-              className="editor-container__toolbar"
-              ref={editorToolbarRef}
-            ></div>
+            <div className="editor-container__toolbar" ref={editorToolbarRef}></div>
             <div className="editor-container__editor-wrapper">
               <div className="editor-container__editor">
-                <div ref={editorRef}>
+                <div>
                   {isLayoutReady && editorConfig && (
                     <CKEditor
                       onReady={(editor) => {
                         console.log("Editor is ready to use!", editor);
                         // 에디터 인스턴스 저장
-                        editorRef.current.instance = editor;
+                        editorRef.current = editor;
                         const wordCount = editor.plugins.get("WordCount");
-                        editorWordCountRef.current.appendChild(
-                          wordCount.wordCountContainer
-                        );
-                        editorToolbarRef.current.appendChild(
-                          editor.ui.view.toolbar.element
-                        );
-                        editorMenuBarRef.current.appendChild(
-                          editor.ui.view.menuBarView.element
-                        );
+                        editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+                        editorToolbarRef.current.appendChild(editor.ui.view.toolbar.element);
+                        editorMenuBarRef.current.appendChild(editor.ui.view.menuBarView.element);
                       }}
                       onAfterDestroy={() => {
-                        Array.from(editorWordCountRef.current.children).forEach(
-                          (child) => child.remove()
+                        Array.from(editorWordCountRef.current.children).forEach((child) =>
+                          child.remove()
                         );
-                        Array.from(editorToolbarRef.current.children).forEach(
-                          (child) => child.remove()
+                        Array.from(editorToolbarRef.current.children).forEach((child) =>
+                          child.remove()
                         );
-                        Array.from(editorMenuBarRef.current.children).forEach(
-                          (child) => child.remove()
+                        Array.from(editorMenuBarRef.current.children).forEach((child) =>
+                          child.remove()
                         );
                       }}
                       editor={DecoupledEditor}
@@ -452,19 +432,14 @@ export default function CKEditorComponent() {
                       }}
                     />
                   )}
-                  {!isLayoutReady && (
-                    <div className="editor-loading">Loading editor...</div>
-                  )}
+                  {!isLayoutReady && <div className="editor-loading">Loading editor...</div>}
                 </div>
               </div>
             </div>
           </div>
           <Sidebar />
         </S.WriteSection>
-        <div
-          className="editor_container__word-count"
-          ref={editorWordCountRef}
-        ></div>
+        <div className="editor_container__word-count" ref={editorWordCountRef}></div>
       </div>
     </div>
   );
