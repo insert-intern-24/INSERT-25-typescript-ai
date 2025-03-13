@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Sidebar from "@/shared/components/write/sideBar/SideBar";
 import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
+import translations from "../../../../node_modules/ckeditor5/dist/translations/ko";
 import {
   DecoupledEditor,
   Alignment,
@@ -131,7 +132,7 @@ class CustomAttributeplugin extends Plugin {
       },
       model: {
         key: IDAttribute,
-        value: (viewElement) => {
+        value: (viewElement: HTMLElement) => {
           console.log("ViewElement", viewElement);
           console.log("ViewElement2", viewElement.getAttribute("id"));
           return viewElement.getAttribute("id");
@@ -156,7 +157,7 @@ export default function CKEditorComponent() {
   const editorContainerRef = useRef(null);
   const editorMenuBarRef = useRef(null);
   const editorToolbarRef = useRef(null);
-  const editorRef = useRef(null);
+  const editorRef = useRef<DecoupledEditor | null>(null);
   const editorWordCountRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
   const { hashed_id } = useParams();
@@ -458,6 +459,7 @@ export default function CKEditorComponent() {
             "tableCellProperties",
           ],
         },
+        translations: translations,
       },
     };
   }, [isLayoutReady]);
