@@ -472,15 +472,6 @@ export default function CKEditorComponent() {
       >
         <S.WriteHeader>
           <p className="title">{fileData.title}</p>
-          <button
-            onClick={() => {
-              const a = `<p data-placeholder="Type or paste your content here!" class="ck-placeholder" data-unique="unique-fm2basrqd" style="color:blue">오늘날 <span id="error-wip7wyk2x" class="__origin_word__">딥페이크</span> 범죄가 증가하는 추세이다.</p>`;
-              // console.log(editorRef.current.data.htmlProcessor.domConverter.)
-              editorRef.current.setData(a);
-            }}
-          >
-            asdf
-          </button>
           <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
         </S.WriteHeader>
         <S.WriteSection>
