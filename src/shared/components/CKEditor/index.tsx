@@ -115,7 +115,7 @@ class CustomAttributeplugin extends Plugin {
     conversion.for("downcast").attributeToElement({
       model: IDAttribute,
       view: (modelAttributeValue, { writer }) => {
-        console.log("ModelAttributeValue", modelAttributeValue);
+        // console.log("ModelAttributeValue", modelAttributeValue);
         return writer.createAttributeElement("span", {
           id: modelAttributeValue,
           class: "__origin_word__",
@@ -133,8 +133,8 @@ class CustomAttributeplugin extends Plugin {
       model: {
         key: IDAttribute,
         value: (viewElement: HTMLElement) => {
-          console.log("ViewElement", viewElement);
-          console.log("ViewElement2", viewElement.getAttribute("id"));
+          // console.log("ViewElement", viewElement);
+          // console.log("ViewElement2", viewElement.getAttribute("id"));
           return viewElement.getAttribute("id");
         },
       },
