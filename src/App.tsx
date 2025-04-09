@@ -35,13 +35,17 @@ function App() {
             setSeconds(parseFloat(elapsed.toFixed(1)));
           }, 100);
 
-          const response = await refineForeign([
-            `<p data-unique='e-1'>${content}</p>`
-          ]);
+  
+
+          for await (const result of refineForeign([
+            `<p data-unique='e-1'>${content}</p>`,
+            `<p data-unique='e-3'>데이터가 많아야지 테스트하기 좋아요.</p>`
+          ])) {
+            console.log(result)
+          }
 
           clearInterval(timer);
           setIsLoading(false);
-          console.log(response);
           setContent("");
         }}
       >
