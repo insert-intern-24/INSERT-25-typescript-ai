@@ -15,6 +15,7 @@ export interface foreignSentenceType {
   target_id: string;
   sentence: string;
   foreignWord: string[];
+  fullSentence: string;
 }
 
 export async function* refineForeign(inputData: string[]) {
@@ -35,7 +36,8 @@ export async function* refineForeign(inputData: string[]) {
         foreignSentenceList.push({
           target_id,
           sentence,
-          foreignWord: foreignInSentence
+          foreignWord: foreignInSentence,
+          fullSentence: content
         });
       }
     }
@@ -51,7 +53,7 @@ export async function* refineForeign(inputData: string[]) {
           code: 1,
           origin_word,
           refine_word,
-          index: foreignSentence.sentence.indexOf(origin_word)
+          index: foreignSentence.fullSentence.indexOf(origin_word)
         }))
       }
     }));
