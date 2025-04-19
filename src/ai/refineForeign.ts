@@ -1,13 +1,13 @@
-import { findForeignWord } from "./lstm/findForeignWord";
-import { dify } from "./dify/dify";
+import { findForeignWord } from "../../tmp/ai/lstm/findForeignWord";
+import { dify } from "../../tmp/ai/dify/dify";
 
 interface refineResponseType {
   target_id: string;
-  error: {
-    code: number,
-    origin_word: string,
-    refine_word: string[],
-    index: number
+  errors: {
+    code: number;
+    origin_word: string;
+    refine_word: string[];
+    index: number;
   }[];
 }
 
@@ -23,7 +23,7 @@ export async function* refineForeign(inputData: string[]) {
 
   for (const html of inputData) {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    const doc = parser.parseFromString(html, "text/html");
     const content = doc.body.textContent || "";
     const target_id = doc.body.querySelector("p")?.getAttribute("data-unique") as string;
 
@@ -46,10 +46,10 @@ export async function* refineForeign(inputData: string[]) {
   const pending = new Set<Promise<{ response: refineResponseType }>>();
 
   foreignSentenceList.forEach((foreignSentence) => {
-    const p = dify(foreignSentence).then(difyResponse => ({ 
+    const p = dify(foreignSentence).then((difyResponse) => ({
       response: {
         target_id: difyResponse.target_id,
-        error: Object.entries(difyResponse.refineWord).map(([origin_word, refine_word]) => ({
+        errors: Object.entries(difyResponse.refineWord).map(([origin_word, refine_word]) => ({
           code: 1,
           origin_word,
           refine_word,
@@ -62,13 +62,13 @@ export async function* refineForeign(inputData: string[]) {
 
   while (pending.size > 0) {
     const finished = await Promise.race(pending);
-    
+
     for (const p of pending) {
-      p.then(data => {
+      p.then((data) => {
         if (data === finished) {
           pending.delete(p);
         }
-      })
+      });
     }
 
     yield finished.response;
